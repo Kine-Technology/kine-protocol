@@ -5,6 +5,12 @@
     "address": "0x9d4e125CCe37a72750125C81626316b0F709E5aD",
     "block": 9302459
   },
+  "kineMultiSigWallet":{
+    "transaction": "0x9422d3e44832cf1da6a03da6932f9cb8764dd58ca11dd512c945c4ef2df50eaf",
+    "address": "0x16E43954ca4B5c19cd8C7edD721ECa0242b0C4c9",
+    "block": 9496376,
+    "gas used": 1680554
+  },
   "tokens": {
     "USDC": "0x433afe89B4e317bbE708Eef3C1b4FFB9401cED3E",
     "KINE": "0xBd2AEBAa88370160d3B0Dcb530555CA2DcFED681",
