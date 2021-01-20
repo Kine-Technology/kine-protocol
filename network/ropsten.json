@@ -51,6 +51,12 @@
     "block": 9469979,
     "gas used": 1838284
   },
+  "KUSDVault": {
+    "transaction": "0x4df7b07634bbaadba6afdbf58eb069d8144372277da8538ae0af55cb1fba2c0d",
+    "address": "0xF18fEF7E1e2D2A20A42C54c176c72b5f0E5035A8",
+    "block": 9501101,
+    "gas used": 603858
+  },
   "Kaptain": {
     "transaction": "0xfd2d4f41e124bdd4cebf543861cbcd42ab0a4453a8f4af040f3c1a724c34c047",
     "address": "0x9218dB2504B6010e224a586F0c63537792bEaaD1",
