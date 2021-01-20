@@ -8,7 +8,7 @@ contract KineMultiSigWallet {
     event Revocation(address indexed sender, uint indexed transactionId);
     event Submission(uint indexed transactionId);
     event Execution(uint indexed transactionId, bytes returnData);
-    event ExecutionFailure(uint indexed transactionId);
+    event ExecutionFailure(uint indexed transactionId, bytes returnData);
     event Deposit(address indexed sender, uint value);
     event OwnerAddition(address indexed owner);
     event OwnerRemoval(address indexed owner);
@@ -215,7 +215,7 @@ contract KineMultiSigWallet {
             if (success)
                 emit Execution(transactionId, returnData);
             else {
-                emit ExecutionFailure(transactionId);
+                emit ExecutionFailure(transactionId, returnData);
                 txn.executed = false;
             }
         }

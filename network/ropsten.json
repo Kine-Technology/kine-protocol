@@ -57,6 +57,12 @@
     "block": 9501101,
     "gas used": 603858
   },
+  "KineTreasury": {
+    "transaction": "0x9bcb421f95b42f858eda4714e14eba6eaf6b3f67d8f5fd403469529cfd67cbc7",
+    "address": "0x836fe8BF4d03138d09A7997BA50C845B025E0113",
+    "block": 9501266,
+    "gas used": 445551
+  },
   "Kaptain": {
     "transaction": "0xfd2d4f41e124bdd4cebf543861cbcd42ab0a4453a8f4af040f3c1a724c34c047",
     "address": "0x9218dB2504B6010e224a586F0c63537792bEaaD1",
