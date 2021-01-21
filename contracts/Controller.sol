@@ -346,7 +346,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
         if (borrowCap != 0) {
             uint totalBorrows = KMCD(kToken).totalBorrows();
             uint nextTotalBorrows = totalBorrows.add(borrowAmount);
-            if (nextTotalBorrows < borrowCap) {
+            if (nextTotalBorrows > borrowCap) {
                 allowed = false;
                 reason = MARKET_BORROW_CAP_REACHED;
                 return (allowed, reason);
