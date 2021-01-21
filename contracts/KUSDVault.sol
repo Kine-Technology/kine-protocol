@@ -17,6 +17,15 @@ contract KUSDVault {
     // @notice Emitted when kUSD transferred
     event TransferKusd(address indexed counterParty, uint amount);
 
+    // @notice Emitted when Erc20 transferred
+    event TransferErc20(address indexed erc20, address indexed target, uint amount);
+
+    // @notice Emitted when Ehter transferred
+    event TransferEther(address indexed target, uint amount);
+
+    // @notice Emitted when Ehter recieved
+    event RecieveEther(uint amount);
+
     // @notice Emitted when operator changed
     event NewOperator(address oldOperator, address newOperator);
 
@@ -49,7 +58,7 @@ contract KUSDVault {
         kUSD = IERC20(kUSD_);
     }
 
-    // @notice Only operator can transfer kUSD to counterParty
+    // @notice Operator can transfer kUSD to counterParty
     function transferKusd(uint amount) external onlyOperator {
         // check balance;
         uint balance = kUSD.balanceOf(address(this));
@@ -59,6 +68,27 @@ contract KUSDVault {
         require(success, "transfer failed");
 
         emit TransferKusd(counterParty, amount);
+    }
+
+    // @notice Only admin can call
+    function transferErc20(address erc20Addr, address target, uint amount) external onlyAdmin {
+        // check balance;
+        IERC20 erc20 = IERC20(erc20Addr);
+        uint balance = erc20.balanceOf(address(this));
+        require(balance >= amount, "not enough erc20 balance");
+        // transfer token
+        erc20.transfer(target, amount);
+
+        emit TransferErc20(erc20Addr, target, amount);
+    }
+
+    // @notice Only admin can call
+    function transferEther(address payable target, uint amount) external onlyAdmin {
+        // check balance;
+        require(address(this).balance >= amount, "not enough ether balance");
+        // transfer ether
+        require(target.send(amount), "transfer failed");
+        emit TransferEther(target, amount);
     }
 
     // @notice Only admin can set operator
@@ -114,5 +144,12 @@ contract KUSDVault {
 
         emit NewAdmin(oldAdmin, admin);
         emit NewPendingAdmin(oldPendingAdmin, pendingAdmin);
+    }
+
+    // allow to recieve ether
+    function() external payable {
+        if(msg.value > 0) {
+            emit RecieveEther(msg.value);
+        }
     }
 }

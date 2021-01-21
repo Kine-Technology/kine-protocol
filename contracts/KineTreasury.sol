@@ -15,7 +15,16 @@ contract KineTreasury {
 
     // @notice Emitted when Kine transferred
     event TransferKine(address indexed target, uint amount);
-    
+
+    // @notice Emitted when Erc20 transferred
+    event TransferErc20(address indexed erc20, address indexed target, uint amount);
+
+    // @notice Emitted when Ehter transferred
+    event TransferEther(address indexed target, uint amount);
+
+    // @notice Emitted when Ehter recieved
+    event RecieveEther(uint amount);
+
     // @notice Emitted when Kine changed
     event NewKine(address oldKine, address newKine);
 
@@ -43,6 +52,27 @@ contract KineTreasury {
         require(success, "transfer failed");
 
         emit TransferKine(target, amount);
+    }
+
+    // @notice Only admin can call
+    function transferErc20(address erc20Addr, address target, uint amount) external onlyAdmin {
+        // check balance;
+        IERC20 erc20 = IERC20(erc20Addr);
+        uint balance = erc20.balanceOf(address(this));
+        require(balance >= amount, "not enough erc20 balance");
+        // transfer token
+        erc20.transfer(target, amount);
+
+        emit TransferErc20(erc20Addr, target, amount);
+    }
+
+    // @notice Only admin can call
+    function transferEther(address payable target, uint amount) external onlyAdmin {
+        // check balance;
+        require(address(this).balance >= amount, "not enough ether balance");
+        // transfer ether
+        require(target.send(amount), "transfer failed");
+        emit TransferEther(target, amount);
     }
 
     // only admin can set kine
@@ -84,5 +114,12 @@ contract KineTreasury {
 
         emit NewAdmin(oldAdmin, admin);
         emit NewPendingAdmin(oldPendingAdmin, pendingAdmin);
+    }
+
+    // allow to recieve ether
+    function() external payable {
+        if(msg.value > 0) {
+            emit RecieveEther(msg.value);
+        }
     }
 }
