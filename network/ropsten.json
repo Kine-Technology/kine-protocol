@@ -1,5 +1,5 @@
 {
-  "oracle": "0xfcc4c7B987A1Be570c0C9785267D315dA2469b06",
+  "oracle": "0xfAB566b927e0A60a3dCDc08FB897f5919c5DE0Fb",
   "testSimpleOracle": {
     "transaction": "0xd458a35f630c894fc710686cdcee95fe8e367108cfba5c618bf6906711ccbc17",
     "address": "0x9d4e125CCe37a72750125C81626316b0F709E5aD",
@@ -64,10 +64,10 @@
     "gas used": 445551
   },
   "Kaptain": {
-    "transaction": "0xfd2d4f41e124bdd4cebf543861cbcd42ab0a4453a8f4af040f3c1a724c34c047",
-    "address": "0x9218dB2504B6010e224a586F0c63537792bEaaD1",
-    "block": 9481738,
-    "gas used": 9481738
+    "transaction": "0x93d2545388de57c13b12184a1e4cce3beb370d9159635f7a3686a8ac331d5abb",
+    "address": "0x18206A47F49e8cfA7964247e0497Ef27100265Ef",
+    "block": 9514504,
+    "gas used": 1409163
   },
   "KUSDMinter": {
     "minter": {

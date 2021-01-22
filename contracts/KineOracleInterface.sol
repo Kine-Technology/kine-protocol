@@ -19,4 +19,14 @@ interface KineOracleInterface {
      * @param symbols Token symbols
      */
     function postPrices(bytes[] calldata messages, bytes[] calldata signatures, string[] calldata symbols) external;
+
+    /**
+     * @notice Post Kine MCD price.
+     */
+    function postMcdPrice(uint mcdPrice) external;
+
+    /**
+     * @notice Get the reporter address.
+     */
+    function reporter() external returns (address);
 }

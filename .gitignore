@@ -2,8 +2,10 @@
 .DS_Store
 build
 migrations
-truffle-config.js
 js/local
+.rpcWs
+.etherscanKey
+.deployer
 
 # idea
 .idea
