@@ -64,10 +64,10 @@
     "gas used": 445551
   },
   "Kaptain": {
-    "transaction": "0x93d2545388de57c13b12184a1e4cce3beb370d9159635f7a3686a8ac331d5abb",
-    "address": "0x18206A47F49e8cfA7964247e0497Ef27100265Ef",
-    "block": 9514504,
-    "gas used": 1409163
+    "transaction": "0xbc65af11962a03f3e59fc4769dfe70740de2716b870f046f67d4e8b6207d7745",
+    "address": "0x78A264CF3D03E7480ab2A1f648D377dF98A29dCA",
+    "block": 9520722,
+    "gas used": 1412433
   },
   "KUSDMinter": {
     "minter": {

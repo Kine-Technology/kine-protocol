@@ -1,5 +1,5 @@
 {
-  "oracle": "0xd7cc60eb656662732389b6dfbccc82c7a24d6024",
+  "oracle": "0x56F45bB3a646aCB557B8Eb462fE6342DB8D40C88",
   "timelock_test": {
     "transaction": "0x5139bb6a3b248bf3799295a00c328d54d6144d40781a6ec3235831491a2e3f0b",
     "address": "0xB796B83d664C795C384f0Bef6d806bd35f16718E",
@@ -81,10 +81,10 @@
     "gas used": 687930
   },
   "Kaptain": {
-    "transaction": "0xf5e52ef14756f9c55067180fdf51dc4878dc1b5b24ec75ca04e839f33da59960",
-    "address": "0xC2856089576dfc486FcFd3DF517b22Cc159fc650",
-    "block": 9501791,
-    "gas used": 712004
+    "transaction": "0x13286f3f05c0760982bd285c4f20adde3f1ff813dfc919420f74b08db95ba469",
+    "address": "0x8BDBdafD1fE10Be9Ba988355a7444F4b106BF409",
+    "block": 9520692,
+    "gas used": 1412433
   },
   "KTokens": {
     "kETH": {

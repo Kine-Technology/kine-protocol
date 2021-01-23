@@ -84,7 +84,13 @@ contract Kaptain is Ownable {
         // kUSD has 18 decimals
         // kMCD has 18 decimals
         // mcdPrice = kUSD total supply / kMCD total amount * 1e6 (scaling factor)
-        uint mcdPrice = kUSDTotal.mul(1e18).div(kMCDTotal).div(1e12);
+        // if there is no borrowed kMCD, then the kMCD price will be set to inital value 1.
+        uint mcdPrice;
+        if(kMCDTotal == 0) {
+            mcdPrice = 1e6;
+        } else {
+            mcdPrice = kUSDTotal.mul(1e18).div(kMCDTotal).div(1e12);
+        }
 
         // post kMCD price to oracle, kMCD price will never be guarded by oracle.
         oracle.postMcdPrice(mcdPrice);

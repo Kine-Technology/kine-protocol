@@ -5,7 +5,7 @@ Kine is a decentralized protocol which establishes general purpose liquidity poo
 
 Kine Protocol allows users to stake ETH and ERC-20 assets as collaterals. Assets staked into the contracts increase the user's debt limit (aka 'liquidation' in codes). Users with unused debt limit can mint kUSD, a synthetic USD-pegging digital asset backed by an over-collateralized liquidity pool. kUSD is the only asset accepted by Kine Exchange, a peer-to-pool derivatives exchange providing multi-asset exposure with zero-slippage trading experience.
 
-Users incur a Multi-Collateralized Debt (MCD) when they mint kUSD, and become part of the pooled counterparty facing traders on Kine Exchange. MCD price may increase or decrease independent of their original minted value, based on the net exposures taken by the liquidity pool. The pool provides liquidity to all trading pairs quoted on Kine Exchange. The exchange accumulates trading fees, and distribute to the pool stakers through KUSDMinter contract. It also reports the MCD price and adjust kUSD supply through the Kaptain contract.
+Users incur a Multi-Collateralized Debt (MCD) when they mint kUSD, and become part of the pooled counterparty facing traders on Kine Exchange. MCD price may increase or decrease independent of their original minted value, based on the net exposures taken by the liquidity pool. The pool provides liquidity to all trading pairs quoted on Kine Exchange. The exchange accumulates trading fees, and distribute to the pool stakers through ```KUSDMinter``` contract. It also reports the MCD price and adjust kUSD supply through the ```Kaptain``` contract.
 
 Users may repay their MCD debt by burning kUSD, which allows them to withdraw part or full of their staked assets. When a user's debt limit is exceeded (aka 'shortfall' in codes), a 3rd-party liquidator may repay the MCD debt on the user's behalf and seize part of its staking assets with a mark-up.
 
@@ -24,13 +24,13 @@ Two brief diagrams as above shows composition of Kine contracts and how should u
 
 ---
 
-KToken contract is the staking contract that allow stakers to stake/unstake their ERC20/ETH asset and gain/burn kTokens representing their staking balances. There are many instances of KToken contract, each one maintain one kind of asset. By minting kTokens, user gain the ability to use kTokens as collateral.
+```KToken``` contract is the staking contract that allow users to stake/unstake their ERC20/ETH asset and gain/burn kTokens which represent their staking balances. There are many instances of ```KToken``` contract, each one maintain one kind of asset. By minting kTokens, user gain the ability to use kTokens as collateral.
 
-Currently there are two types of kTokens: KErc20 and KEther. KErc20 wrap a ERC20 underlying asset while KEther wrap Ether asset.
+Currently there are two types of kTokens: KErc20 and KEther. ```KErc20``` wrap a ERC20 underlying asset while ```KEther``` wrap Ether asset.
 
-When user stake(mint), unstake(redeem) or transfer kTokens, the KToken contract will call controller first to check user's liquidation and will forbidden user action if it is under-collateralized.
+When user stake(mint), unstake(redeem) or transfer kTokens, all user's actions will go through ```Controller``` first to check if user's liquidation is sufficient and will forbidden user's action if it is under-collateralized.
 
-For kErc20, it follows DelegateProxy pattern to realize upgradable. Each kErc20 token will have two contracts: KErc20Delegate and KErc20Delegator. KErc20Delegator is the storage contract while KErc20Delegate is logics implementation contract.
+```KErc20``` follows DelegateProxy pattern to realize upgradable. Each kErc20 token will have two contracts: ```KErc20Delegate``` and ```KErc20Delegator```. ```KErc20Delegator``` is the storage contract while ```KErc20Delegate``` is logics implementation contract.
 
 <span style="color:green">**Mint**</green>
 
@@ -42,11 +42,11 @@ The mint function transfers an asset into the protocol as staking. The user rece
 function mint(uint mintAmount) external returns (uint)
 ```
 
-- `msg.sender`: The account which shall supply the asset, and own the minted kTokens.
-- `mintAmount`: The amount of the asset to be supplied, in units of the underlying asset.
+- `msg.sender`: The account which shall stake the asset, and gain the minted kTokens.
+- `mintAmount`: The amount of the asset to be staked, in units of the underlying asset.
 - `RETURN`: The actual minted kToken amount.
 
-Before supplying an asset, users must first approve the cToken to access their token balance.
+Before supplying an asset, users must first approve the kToken to access their token balance.
 
 **`KEther`**
 
@@ -54,7 +54,7 @@ Before supplying an asset, users must first approve the cToken to access their t
 function mint() external payable returns (uint)
 ```
 
-- `msg.sender`: The account which shall supply the asset, and own the minted kTokens.
+- `msg.sender`: The account which shall stke the asset, and gain the minted kTokens.
 - `msg.value`: The amount of ether to be supplied, in wei.
 - `RETURN`: The actual minted kToken amount.
 
@@ -87,9 +87,9 @@ function transfer(address dst, uint256 amount) external returns (bool)
 
 <span style="color:green">**GetCash**</green>
 
-Cash is the amount of underlying balance owned by this kToken contract. One may query the total amount of cash available to this market.
+Cash is the amount of underlying balance owned by this kToken contract.
 
-`**KErc20/KEther**`
+**`KErc20/KEther`**
 
 ```solidity
 function getCash() external view returns (uint)
@@ -101,7 +101,7 @@ function getCash() external view returns (uint)
 
 Total Supply is the number of tokens currently in circulation in this kToken market.
 
-`**KErc20/KEther**`
+**`KErc20/KEther`**
 
 ```solidity
 function totalSupply() external view returns (uint)
@@ -123,45 +123,45 @@ Transfer(address indexed from, address indexed to, uint amount) //Emitted upon a
 
 ---
 
-KMCD contract allow stakers to borrow/repay Kine MCD (Multiple Connected Debt) through KUSDMinter contract. When user mint/burn kUSD in KUSDMinter contract, the KUSDMinter contract will borrow/repay kMCD on behalf of user.
+``KMCD`` contract let stakers to borrow/repay Kine MCD (kMCD) through ``KUSDMinter`` contract. When user mint/burn kUSD in ``KUSDMinter`` contract, the ```KUSDMinter``` contract will borrow/repay kMCD on behalf of user.
 
-Every time user borrow/repay Kine MCD, KMCD contract will call Controller contract to check staker's liquidation and prevent user action if user is under-collateralized.
+Every time user borrow/repay Kine MCD, ``KMCD`` contract will call ``Controller`` contract to check borrower's liquidation and forbid user action if user is under-collateralized.
 
-kMCD also follows DelegateProxy pattern to realize upgradable.
+``KMCD`` also follows DelegateProxy pattern to realize upgradable.
 
 <span style="color:green">**BorrowBehalf**</green>
 
-The borrowBehalf function can be only called by KUSDMinter contract when user mint kUSD, it will create a kMCD borrow balance to borrower. The amount borrowed must be less than the borrower's Account Liquidity.
+The borrowBehalf function can be only called by ``KUSDMinter`` contract when user mint kUSD, it will create a kMCD borrow (stake) balance to borrower. The amount borrowed must be less than the borrower's Account Liquidity.
 
 ```solidity
 function borrowBehalf(address payable borrower, uint borrowAmount) onlyMinter external
 ```
 
-- `msg.sender`: The caller must be KUSDMinter contract, otherwise will revert.
-- `borrower`: The account to which borrowed kMCD balance shall be created.
+- `msg.sender`: The caller must be ``KUSDMinter`` contract, otherwise will revert.
+- `borrower`: The account to which borrowed (staked) kMCD balance shall be created.
 - `borrowAmount`: The amount of the kMCD to be borrowed.
 
 <span style="color:green">**RepayBorrowBehalf**</green>
 
-The repayBorrowBehalf function can be only called by KUSDMinter contract when user burn kUSD, it will reduce the target user's borrow balance.
+The repayBorrowBehalf function can be only called by ``KUSDMinter`` contract when user burn kUSD, it will reduce the target user's borrow balance.
 
 ```solidity
 function repayBorrowBehalf(address borrower, uint repayAmount) onlyMinter external
 ```
 
-- `msg.sender`: The caller must be KUSDMinter contract, otherwise will revert.
+- `msg.sender`: The caller must be ``KUSDMinter`` contract, otherwise will revert.
 - `borrower`: The account from whom borrowed kMCD balance shall be reduced.
 - `repayAmount`: The amount of the kMCD to be reduced.
 
 <span style="color:green">**LiquidateBorrowBehalf**</green>
 
-The liquidateBorrowBehalf function can be only called by KUSDMinter contract when user burn kUSD to liquidate. A user who has negative account liquidity is subject to liquidation by other users. When a liquidation occurs, a liquidator may repay some or all of borrowed kMCD on behalf of a borrower and in return receive a discounted amount of collateral held by the kMCD borrower. The discount is defined as the liquidation incentive.A liquidator may close up to a certain fixed percentage (i.e. close factor) of any individual kMCD borrow of the underwater account.
+The liquidateBorrowBehalf function can be only called by ``KUSDMinter`` contract when user burn kUSD to liquidate. A user who has negative account liquidity is subject to liquidation by other users. When a liquidation occurs, a liquidator may repay some or all of borrowed kMCD on behalf of a borrower and in return receive a discounted amount of collateral held by the kMCD borrower. The discount is defined as the liquidation incentive.A liquidator may close up to a certain fixed percentage (i.e. close factor) of any individual kMCD borrow of the underwater account.
 
 ```solidity
 function liquidateBorrowBehalf(address liquidator, address borrower, uint repayAmount, KTokenInterface kTokenCollateral) onlyMinter external
 ```
 
-- `msg.sender`: The caller must be KUSDMinter contract, otherwise will revert.
+- `msg.sender`: The caller must be ``KUSDMinter`` contract, otherwise will revert.
 - `liquidator`: The account which shall liquidate the borrower by repaying their kMCD and seizing their collateral.
 - `borrower`: The account with negative account liquidity that shall be liquidated.
 - `repayAmount`: The amount of the borrowed kMCD to be repaid and converted into collateral.
@@ -175,8 +175,8 @@ BorrowBalance shows given account's borrowed kMCD balance.
 function borrowBalance(address account) public view returns (uint)
 ```
 
-- `account`: The account of whom kMCD balance should be showed.
-- `RETURN`: The borrowed kMCD balance.
+- `account`: The account of whom kMCD balance is queried.
+- `RETURN`: The borrowed kMCD balance of account.
 
 <span style="color:green">**TotalBorrows**</green>
 
