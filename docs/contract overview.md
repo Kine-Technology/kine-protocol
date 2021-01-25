@@ -123,9 +123,9 @@ Transfer(address indexed from, address indexed to, uint amount) //Emitted upon a
 
 ---
 
-``KMCD`` contract let stakers to borrow/repay Kine MCD (kMCD) through ``KUSDMinter`` contract. When user mint/burn kUSD in ``KUSDMinter`` contract, the ```KUSDMinter``` contract will borrow/repay kMCD on behalf of user.
+``KMCD`` contract let stakers to borrow/repay Kine MCD (kMCD) through ``KUSDMinter`` contract when user mint/burn kUSD in ``KUSDMinter`` contract.
 
-Every time user borrow/repay Kine MCD, ``KMCD`` contract will call ``Controller`` contract to check borrower's liquidation and forbid user action if user is under-collateralized.
+When user borrow/repay Kine MCD, all user's actions will go through ``Controller`` contract to check if borrower's liquidation is sufficient and will forbid user action if it is under-collateralized.
 
 ``KMCD`` also follows DelegateProxy pattern to realize upgradable.
 
@@ -202,7 +202,7 @@ LiquidateBorrow(address liquidator, address borrower, uint repayAmount, address 
 
 ---
 
-The Controller is the risk management layer of the Kine on-chain protocol. It determines how much collateral a user is required to maintain, and whether (and by how much) a user can be liquidated. Each time a user interacts with a kToken or KUSDMinter, the Controller is asked to approve or deny the transaction.
+The Controller is the risk management layer of the Kine Protocol. It determines how much collateral a user is required to maintain, and whether (and by how much) a user can be liquidated. Each time a user interacts with a kToken or kUSD minter, the Controller is asked to approve or deny the transaction.
 
 The Controller maps user balances to prices (via the Price Oracle) to risk weights (called Collateral Factors) to make its determinations. Users explicitly list which assets they would like included in their risk scoring, by calling Enter Markets and Exit Market.
 
@@ -300,32 +300,32 @@ MarketExited(KToken kToken, address account) //Emitted upon a successful Exit Ma
 
 ---
 
-KineUSD contract is an ERC20 contract. It can mint/burn kUSD which is the stable currency of Kine trading system when kMCD is borrowed/repaid by user through KUSDMinter contract.
+KineUSD contract is an ERC20 contract, it can be mint/burn when kMCD is borrowed/repaid by user through ``KUSDMinter`` contract.
 
-kUSD can be transferred into Kine off-chain trading system and trade for different kinds of synthetic assets. Once kUSD is transferred into Kine off-chain trading system, the system will keep the kUSD until user withdraw them. Since users trading synthetic assets and price of assets are changing, the total value of all synthetic assets will increase/decrease which will lead to kMCD price changing. Kine off-chain trading system will periodically post new kMCD price into Kine Oracle, and mint/burn synthetic-assets-total-value-change equivalent kUSD into vault account, so that the total supply of kUSD can represent the total synthetic assets' value.
+kUSD can be transferred into Kine Exchange to trade for different kinds of synthetic assets, and the total value of synthetic assests will reflected back by the total supply of kUSD through treasury mint/burn.  
 
 <span style="color:green">**Mint**</green>
 
-Mint function can only be called by KUSDMinter and will mint kUSD to specified user.
+Mint function can only be called by ``KUSDMinter`` and will mint kUSD to specified user.
 
 ```solidity
 function mint(address account, uint amount) external onlyMinter
 ```
 
-- `msg.sender`: The caller can only be KUSDMinter contract, otherwise will revert.
+- `msg.sender`: The caller can only be ``KUSDMinter`` contract, otherwise will revert.
 - `account`: The account whom the kUSD shall mint to.
 - `amount`: The amount of kUSD to mint.
 
 <span style="color:green">**Burn**</green>
 
-Burn function can only be called by KUSDMinter and will burn kUSD from specified user.
+Burn function can only be called by ``KUSDMinter`` and will burn kUSD from specified user.
 
 ```solidity
 function burn(address account, uint amount) external onlyMinter
 ```
 
-- `msg.sender`: The caller can only be KUSDMinter contract, otherwise will revert.
-- `account`: The account from whom the kUSD shall be burn from.
+- `msg.sender`: The caller can only be KUSDMinter contract.
+- `account`: The account from whom the kUSD shall be burnt from.
 - `amount`: The amount of kUSD to be burnt.
 
 <span style="color:green">**KeyEvents**</green>
@@ -340,19 +340,19 @@ Transfer(address indexed from, address indexed to, uint256 value) //Emitted upon
 
 ---
 
-KUSDMinter contract allow users to borrow/repay kMCD to mint/burn kUSD. When user mint/burn kUSD, KUSDMinter will borrow/repay equivalent kMCD from KMCD contract on behalf of user according to kMCD price then. This will trigger Controller to check user's liquidity and permit or forbid user's action.
+KUSDMinter contract allow users to borrow/repay kMCD to mint/burn kUSD. When user mint/burn kUSD, KUSDMinter will borrow/repay equivalent kMCD from ``KMCD`` contract on behalf of user according to kMCD price then. This will trigger Controller to check user's liquidity and permit or forbid user's action.
 
 KUSDMinter is also the interface for users to liquidate other users' kMCD if they are under-collateralized in order to seize an amplified collateral.
 
-KUSDMinter also allows Kine off-chain trading system's treasury account to update kUSD vault account's balances to keep kUSD total supply synced with the total value of synthetic assets of Kine trading system.
+KUSDMinter also allows Kine Exchange treasury account to update kUSD vault's balance to keep kUSD total supply synced with the total value of synthetic assets.
 
-Users who borrowed kMCD to mint kUSD become the pooled counter parties of Kine trading system, they took the risks that kMCD price may fluctuate. So we reward these users by distribute Kine token in KUSDMinter contract. The reward will be periodically added to minter contract and will released to users in a preset release period.
+Users who borrowed kMCD to mint kUSD become the pooled counter parties in Kine Exchange, they took the risks that kMCD price may fluctuate. A proportion of trading fees together with Kine token reward will be distributed into `KUSDMinter` contract to reward these users. The reward will be periodically added to minter contract and will released to users in a preset release period.
 
 KUSDMinter also follows DelegateProxy pattern to realize upgradable.
 
 <span style="color:green">**Mint**</green>
 
-Mint function borrow equivalent kMCD on behalf of user according to kMCD price and mint specified amount of kUSD to caller. When borrow kMCD from KMCD contract, controller will check if user's liquidity is sufficient and permit or forbid user's action. Since mint function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
+Mint function borrow equivalent kMCD on behalf of user according to kMCD price and mint specified amount of kUSD to caller. When borrow kMCD from `KMCD` contract, controller will check if user's liquidity is sufficient and will permit or forbid user's action. Since mint function will change caller's borrowed kMCD amount, will update caller's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
 
 ```solidity
 function mint(uint kUSDAmount) external checkStart updateReward(msg.sender)
@@ -363,7 +363,7 @@ function mint(uint kUSDAmount) external checkStart updateReward(msg.sender)
 
 <span style="color:green">**Burn**</green>
 
-Burn function burn specified amount of kUSD from caller and repay equivalent kMCD on behalf of user according to kMCD price. Since burn function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
+Burn function burn specified amount of kUSD from caller and repay equivalent kMCD on behalf of user according to kMCD price. Since burn function will change caller's borrowed kMCD amount, will update caller's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
 
 ```solidity
 function burn(uint kUSDAmount) external checkStart updateReward(msg.sender)
@@ -374,7 +374,7 @@ function burn(uint kUSDAmount) external checkStart updateReward(msg.sender)
 
 <span style="color:green">**BurnMax**</green>
 
-BurnMax function try to burn user's all borrowed kMCD equivalent kUSD. If kUSD is not enough to burn all borrowed kMCD, will just burn all kUSD and repay equivalent kMCD. Since burnMax function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
+BurnMax function try to burn equivalent kUSD to caller's all borrowed kMCD. If kUSD is not enough to burn all borrowed kMCD, will just burn all kUSD and repay equivalent kMCD. Since burnMax function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
 
 ```solidity
 function burnMax() external checkStart updateReward(msg.sender)
@@ -384,7 +384,7 @@ function burnMax() external checkStart updateReward(msg.sender)
 
 <span style="color:green">**Liquidate**</green>
 
-Liquidate function call kMCD's liquidateBehalf function (see KMCD) on behalf of caller. If repay kMCD amount equivalent kUSD amount reached given maxBurnKUSDAmount, call will revert.
+Liquidate function call kMCD's liquidateBehalf function (see `KMCD`) on behalf of caller. If repay kMCD amount equivalent kUSD amount reached given maxBurnKUSDAmount, call will revert.
 
 ```solidity
 function liquidate(address staker, uint unstakeKMCDAmount, uint maxBurnKUSDAmount, address kTokenCollateral) external checkStart updateReward(staker)
@@ -398,7 +398,7 @@ function liquidate(address staker, uint unstakeKMCDAmount, uint maxBurnKUSDAmoun
 
 <span style="color:green">**Reward Earned**</green>
 
-Earned function shows account's currently accrued Kine reward. User will gain rewards since they borrowed kMCD to mint kUSD.
+Earned function shows account's currently accrued reward.
 
 ```solidity
 function earned(address account) public view returns (uint)
@@ -409,7 +409,7 @@ function earned(address account) public view returns (uint)
 
 <span style="color:green">**Reward Claimable**</green>
 
-Claimable function shows account's currently matured Kine reward. User's accrued reward will mature gradually in a preset release period. The proportion of matured reward to accrued reward is the proportion of past time since last claim reward to the release period.
+Claimable function shows account's currently matured reward. User's accrued reward will mature gradually in a preset release period. The proportion of matured reward to accrued reward is the proportion of past time since last claim to the release period.
 
 ```solidity
 function claimable(address account) external view returns (uint)
@@ -420,7 +420,7 @@ function claimable(address account) external view returns (uint)
 
 <span style="color:green">**Get Reward**</green>
 
-GetReward function will transfer the matured reward to caller and start a new release period of left and new accrued reward.
+GetReward function will transfer the matured reward to caller and start a new release period for left and new accrued reward.
 
 ```solidity
 function getReward() external checkStart updateReward(msg.sender)
@@ -430,25 +430,25 @@ function getReward() external checkStart updateReward(msg.sender)
 
 <span style="color:green">**Treasury Mint**</green>
 
-TreasuryMint function can only be called by Kine treasury account, will mint kUSD to Kine vault account to keep kUSD total supply synced with the total value of synthetic assets of Kine trading system.
+TreasuryMint function can only be called by Kine Exchange treasury account (see `Kaptain`), will mint kUSD to Kine vault to keep kUSD total supply synced with the total value of synthetic assets of Kine Exchange.
 
 ```solidity
 function treasuryMint(uint amount) external onlyTreasury
 ```
 
 - `msg.sender`: The treasury account of Kine system.
-- `amount`: The increased value of synthetic assets of Kine off-chain trading system.
+- `amount`: The increased value of synthetic assets of Kine Exchange.
 
 <span style="color:green">**Treasury Burn**</green>
 
-TreasuryBurn function can only be called by Kine treasury account, will burn kUSD from Kine vault account to keep kUSD total supply synced with the total value of synthetic assets of Kine trading system.
+TreasuryBurn function can only be called by Kine treasury account (see `Kaptain`), will burn kUSD from Kine vault to keep kUSD total supply synced with the total value of synthetic assets of Kine Exchange.
 
 ```solidity
 function treasuryBurn(uint amount) external onlyTreasury
 ```
 
 - `msg.sender`: The treasury account of Kine system.
-- `amount`: The decreased value of synthetic assets of Kine off-chain trading system.
+- `amount`: The decreased value of synthetic assets of Kine Exchange.
 
 <span style="color:green">**KeyEvents**</green>
 
@@ -468,7 +468,7 @@ TreasuryBurn(uint amount) //Emitted upon a successful TreasuryBurn.
 
 KineOracle is built upon [*Compound Oracle*](https://compound.finance/docs/prices). Kine reutilize compound's `OpenOraclePriceData` contract to store reported prices, and built a customized view contract `KineOracle` to store prices that are signed by Kine reporter. For the tokens that have price in compound's `UniswapAnchoredView`, `KineOracle` will directly get price from it; for the token prices (kMCD, kine) that owned by Kine, `KineOracle` will maintain by itself using similar logics as `UniswapAnchoredView`.
 
-Since kMCD price is always changing together with Kine vault kUSD balance, and which two are both coming from Kine off-chain systems, we have an additional contract - Kaptain to report the prices together with the vault kUSD balance change. So Kaptain contract is Kine system's treasury account.
+Since kMCD price is always changing together with Kine vault kUSD balance, and which two are both coming from Kine Exchange, we have an additional contract - `Kaptain` to report the prices together with the vault kUSD balance change. So Kaptain contract is Kine Exchange's treasury account.
 
 <span style="color:green">**Post Prices**</green>
 
@@ -484,6 +484,18 @@ function postPrices(bytes[] calldata messages, bytes[] calldata signatures, stri
 - `signatures[]`: An array of signatures corresponding to the messages. Each signature is a bytes[] with the format (bytes32 r, bytes32 s, uint8 v).
 - `symbols[]`: An array of symbols corresponding to the price messages.
 
+<span style="color:green">**Post MCD price**</green>
+
+MCD price is calculated in `Kaptain` contract by updated kUSD total supply divided by kMCD total borrow balance. 
+
+**`KineOracle`**
+
+```solidity
+function postMcdPrice(uint mcdPrice) external onlyKaptain
+```
+
+- `mcdPrice`: MCD price scaled by 1e6.
+
 <span style="color:green">**Price**</green>
 
 Get the most recent price for a token in USD with 6 decimals of precision.
@@ -491,7 +503,7 @@ Get the most recent price for a token in USD with 6 decimals of precision.
 **`KineOracle`**
 
 ```solidity
-function price(string memory symbol) external view returns (uint
+function price(string memory symbol) external view returns (uint)
 ```
 
 - `symbol`: Symbol as a string
@@ -515,19 +527,16 @@ function getUnderlyingPrice(address kToken) external view returns (uint)
 
 ---
 
-Kaptain contract let Kine system's kaptain account to report signed kMCD, kine prices and Kine vault kUSD balance change at the same transaction.
+Kaptain contract let Kine Exchange's poster account to report signed kine price and Kine vault kUSD balance change, calculate kMCD price and post prices to `KineOracle` at the same transaction.
 
 <span style="color:green">**Steer**</green>
 
-Steer function will post signed kMCD, kine prices to `KineOracle` and call `KUSDMinter`'s treasuryMint/treasuryBurn to update vault kUSD balance at the same transaction.
+Steer function call `KUSDMinter`'s treasuryMint/treasuryBurn to update vault kUSD balance, calculate kMCD price and post prices to `KineOracle` and  at the same transaction.
 
 ```solidity
-function steer(bytes[] calldata messages, bytes[] calldata signatures, string[] calldata symbols, uint256 vaultKusdDelta, bool isVaultIncreased) external onlyOwner
+function steer(bytes calldata message, bytes calldata signature) external onlyPoster
 ```
 
-- `msg.sender`: Only Kine kaptain account can call this function.
-- `messages[]`: The array of prices to sign. Each message is a bytes[] with the format: (string memory kind, uint64 timestamp, string memory key, uint64 value)
-- `signatures[]`: An array of signatures corresponding to the messages. Each signature is a bytes[] with the format (bytes32 r, bytes32 s, uint8 v).
-- `symbols[]`: An array of symbols corresponding to the price messages.
-- `vaultKusdDelta`: The increased/decreased kUSD balance of Kine vault since last steer called.
-- `isVaultIncreased`: True if vault kUSD balance increased, false if decreased.
+- `msg.sender`: Only poster can call this function.
+- `message`: The report data to sign with the format: (bytes[] memory messages, bytes[] memory signatures, string[] memory symbols, uint256 vaultKusdDelta, bool isVaultIncreased, uint256 nonce)
+- `signature`: Signature of the messages with the format (bytes32 r, bytes32 s, uint8 v).
