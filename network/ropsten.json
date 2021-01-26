@@ -18,10 +18,10 @@
     "new Kine": "0x5991f1c1EB3fc374F65ED948A615504c2aEa967C"
   },
   "Controller": {
-    "transaction": "0xfd33150593d623fc20740113a8d55e6a327cfc79afce1077030f73e4d7c10dbd",
-    "address": "0xAd5c657776B54810746403Db1654e98ddDFe8E6f",
-    "block": 9507175,
-    "gas used": 3290402
+    "transaction": "0x26a8b1d4371bf72b03a01fc6abdc2ad2b9958c3dd6df97a0dc555dbbb52bd4e2",
+    "address": "0x6F02D31cDA5F982d38968d70E850e5B691f5682e",
+    "block": 9538077,
+    "gas used": 3204856
   },
   "Unitroller": {
     "transaction": "0xd7f6ce8af1f02d7e8f791189489c9a107dbd483c5863dd7f98a6dd9824c3aba7",

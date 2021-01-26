@@ -890,8 +890,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
 
     function _setMintPaused(KToken kToken, bool state) public returns (bool) {
         require(markets[address(kToken)].isListed, "cannot pause a market that is not listed");
-        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause");
-        require(msg.sender == admin || state == true, "only admin can unpause");
+        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause/unpause");
 
         mintGuardianPaused[address(kToken)] = state;
         emit ActionPaused(kToken, "Mint", state);
@@ -900,8 +899,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
 
     function _setBorrowPaused(KToken kToken, bool state) public returns (bool) {
         require(markets[address(kToken)].isListed, "cannot pause a market that is not listed");
-        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause");
-        require(msg.sender == admin || state == true, "only admin can unpause");
+        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause/unpause");
 
         borrowGuardianPaused[address(kToken)] = state;
         emit ActionPaused(kToken, "Borrow", state);
@@ -909,8 +907,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     }
 
     function _setTransferPaused(bool state) public returns (bool) {
-        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause");
-        require(msg.sender == admin || state == true, "only admin can unpause");
+        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause/unpause");
 
         transferGuardianPaused = state;
         emit ActionPaused("Transfer", state);
@@ -918,8 +915,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     }
 
     function _setSeizePaused(bool state) public returns (bool) {
-        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause");
-        require(msg.sender == admin || state == true, "only admin can unpause");
+        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause/unpause");
 
         seizeGuardianPaused = state;
         emit ActionPaused("Seize", state);
