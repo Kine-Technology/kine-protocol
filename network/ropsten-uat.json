@@ -48,10 +48,10 @@
   },
   "KUSDMinter": {
     "minter": {
-      "transaction": "0x5afea6e66ea2fb5383aede3561e664b34f76c68bed315bee8f258adfa71f76c1",
-      "address": "0x3870136fE8c651B162aDf4450687a7Be0b610066",
-      "block": 9501698,
-      "gas used": 2698296,
+      "transaction": "0x7024aaf1c68d3962113c76da4dcb6295f4856967c769cae5953a701bcbd34cd1",
+      "address": "0xc62ee4d92296751E6127F1fF73d3C942E9347296",
+      "block": 9553904,
+      "gas used": 2811144,
       "contract": "KUSDMinter"
     },
     "delegator": {

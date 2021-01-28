@@ -78,6 +78,8 @@ contract KUSDMinter is IRewardDistributionRecipient {
     event NewRewardDuration(uint oldRewardDuration, uint newRewardDuration);
     /// @notice Emitted when reward release period changed
     event NewRewardReleasePeriod(uint oldRewardReleasePeriod, uint newRewardReleasePeriod);
+    /// @notice Emitted when burn cool down time changed
+    event NewBurnCooldownTime(uint oldCooldown, uint newCooldownTime);
     /// @notice Emitted when user mint KUSD
     event Mint(address indexed user, uint mintKUSDAmount, uint stakedKMCDAmount, uint userStakesNew, uint totalStakesNew);
     /// @notice Emitted when user burnt KUSD
@@ -144,6 +146,12 @@ contract KUSDMinter is IRewardDistributionRecipient {
     uint public rewardPerTokenStored;
     /// @notice Last time that rewardPerTokenStored is updated. Happens whenever total stakes going to be changed.
     uint public lastUpdateTime;
+    /**
+     * @notice The minium cool down time before user can burn kUSD after they mint kUSD everytime.
+     * This is to raise risk and cost to arbitrageurs who front run our prices updates in oracle to drain profit from stakers.
+     * Should be larger then minium price post interval.
+     */
+    uint public burnCooldownTime;
 
     struct AccountRewardDetail {
         /// @dev Last time account claimed its reward
@@ -152,6 +160,8 @@ contract KUSDMinter is IRewardDistributionRecipient {
         uint rewardPerTokenUpdated;
         /// @dev Accrued rewards haven't been claimed of this account
         uint accruedReward;
+        /// @dev Last time account mint kUSD
+        uint lastMintTime;
     }
 
     /// @notice Mapping of account addresses to account reward detail
@@ -189,6 +199,11 @@ contract KUSDMinter is IRewardDistributionRecipient {
     /// @notice Prevent accounts other than treasury to mint/burn KUSD
     modifier onlyTreasury() {
         require(msg.sender == treasury, "only treasury account is allowed");
+        _;
+    }
+
+    modifier afterCooldown(address staker) {
+        require(accountRewardDetails[staker].lastMintTime.add(burnCooldownTime) < block.timestamp, "burn still cooling down");
         _;
     }
 
@@ -270,6 +285,8 @@ contract KUSDMinter is IRewardDistributionRecipient {
     */
     function mint(uint kUSDAmount) external checkStart updateReward(msg.sender) {
         address payable msgSender = _msgSender();
+        // update sender's mint time
+        accountRewardDetails[msgSender].lastMintTime = block.timestamp;
 
         uint kMCDPriceMantissa = KineOracleInterface(controller.getOracle()).getUnderlyingPrice(address(kMCD));
         require(kMCDPriceMantissa != 0, "Mint: get Kine MCD price zero");
@@ -300,7 +317,7 @@ contract KUSDMinter is IRewardDistributionRecipient {
     * Burn will fail if hasn't reach start time.
     * @param kUSDAmount The amount of KUSD user want to burn
     */
-    function burn(uint kUSDAmount) external checkStart updateReward(msg.sender) {
+    function burn(uint kUSDAmount) external checkStart afterCooldown(msg.sender) updateReward(msg.sender) {
         address msgSender = _msgSender();
 
         // burn user's KUSD
@@ -331,7 +348,7 @@ contract KUSDMinter is IRewardDistributionRecipient {
     /**
     * @notice BurnMax unstake and repay all borrowed Kine MCD for user and burn equivalent KUSD
     */
-    function burnMax() external checkStart updateReward(msg.sender) {
+    function burnMax() external checkStart afterCooldown(msg.sender) updateReward(msg.sender) {
         address msgSender = _msgSender();
 
         uint kMCDPriceMantissa = KineOracleInterface(controller.getOracle()).getUnderlyingPrice(address(kMCD));
@@ -503,6 +520,12 @@ contract KUSDMinter is IRewardDistributionRecipient {
         uint oldRewardReleasePeriod = rewardReleasePeriod;
         rewardReleasePeriod = newRewardReleasePeriod;
         emit NewRewardReleasePeriod(oldRewardReleasePeriod, newRewardReleasePeriod);
+    }
+
+    function _setCooldownTime(uint newCooldownTime) external onlyOwner {
+        uint oldCooldown = burnCooldownTime;
+        burnCooldownTime = newCooldownTime;
+        emit NewBurnCooldownTime(oldCooldown, newCooldownTime);
     }
 
     /**

@@ -331,7 +331,7 @@ function burn(address account, uint amount) external onlyMinter
 <span style="color:green">**KeyEvents**</green>
 
 ```solidity
-Transfer(address indexed from, address indexed to, uint256 value) //Emitted upon a successful Transfer
+Transfer(address indexed from, address indexed to, uint256 value) //Emitted upon a successful Transfer/Mint/Burn
 ```
 
 
@@ -363,10 +363,10 @@ function mint(uint kUSDAmount) external checkStart updateReward(msg.sender)
 
 <span style="color:green">**Burn**</green>
 
-Burn function burn specified amount of kUSD from caller and repay equivalent kMCD on behalf of user according to kMCD price. Since burn function will change caller's borrowed kMCD amount, will update caller's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
+Burn function burn specified amount of kUSD from caller and repay equivalent kMCD on behalf of user according to kMCD price. Since burn function will change caller's borrowed kMCD amount, will update caller's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert. And there is a burn cooldown time before user can burn kUSD after they mint kUSD everytime to raise risk and cost to arbitrageurs who front run our prices updates in oracle to drain profit from stakers.
 
 ```solidity
-function burn(uint kUSDAmount) external checkStart updateReward(msg.sender)
+function burn(uint kUSDAmount) external checkStart afterCooldown(msg.sender) updateReward(msg.sender)
 ```
 
 - `msg.sender`: The account from whom kUSD will burn.
@@ -374,10 +374,10 @@ function burn(uint kUSDAmount) external checkStart updateReward(msg.sender)
 
 <span style="color:green">**BurnMax**</green>
 
-BurnMax function try to burn equivalent kUSD to caller's all borrowed kMCD. If kUSD is not enough to burn all borrowed kMCD, will just burn all kUSD and repay equivalent kMCD. Since burnMax function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert.
+BurnMax function try to burn equivalent kUSD to caller's all borrowed kMCD. If kUSD is not enough to burn all borrowed kMCD, will just burn all kUSD and repay equivalent kMCD. Since burnMax function will change caller's borrowed kMCD amount, will update call's reward status first. There is a start time that users can mint/burn kUSD, if time not reached, call will revert. And there is a burn cooldown time before user can burn kUSD after they mint kUSD everytime to raise risk and cost to arbitrageurs who front run our prices updates in oracle to drain profit from stakers.
 
 ```solidity
-function burnMax() external checkStart updateReward(msg.sender)
+function burnMax() external checkStart afterCooldown(msg.sender) updateReward(msg.sender)
 ```
 
 - `msg.sender`: The account from whom kUSD will burn.
@@ -441,7 +441,7 @@ function treasuryMint(uint amount) external onlyTreasury
 
 <span style="color:green">**Treasury Burn**</green>
 
-TreasuryBurn function can only be called by Kine treasury account (see `Kaptain`), will burn kUSD from Kine vault to keep kUSD total supply synced with the total value of synthetic assets of Kine Exchange.
+TreasuryBurn function can only be called by Kine Exchange treasury account (see `Kaptain`), will burn kUSD from Kine vault to keep kUSD total supply synced with the total value of synthetic assets of Kine Exchange.
 
 ```solidity
 function treasuryBurn(uint amount) external onlyTreasury
