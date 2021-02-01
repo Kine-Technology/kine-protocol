@@ -202,7 +202,7 @@ LiquidateBorrow(address liquidator, address borrower, uint repayAmount, address 
 
 `Controller` implements the risk management functionality of the Kine Protocol. `Controller` evaluates users' liquidity on their attempts to withdraw collaterals or take on more debts. It projects user-selected (by calling `Enter Markets` and `Exit Market`) staking assets in `KToken` contracts by `Collateral Factor` and asset prices (through `KineOracle`) to user's liquidity, and control the amount of debt user can incur (`borrow`) or reduce (`repay`) in consequence. When a user becomes under-collateralized, `Controller` calculates the proportion of its debt subject to liquidation by `Close Factor`, and the amplified amount of collaterals by `Liquidation Incentive` to be seized by liquidators.
 
-`Controller` holds references of all supported `KToken`/`KMCD` instances, `KineOracle` instance and provides functions to evaulate if transactions in `KToken`, `KMCD` are allowed or not. In certain conditions, `admin` and `pauseGuardian` can `pause` and `unpause`. through `Controller` contract.
+`Controller` holds references of all supported `KToken`/`KMCD` instances, `KineOracle` instance and provides functions to evaluate if transactions in `KToken`, `KMCD` are allowed or not. In certain conditions, `admin` and `pauseGuardian` can `pause` and `unpause` through `Controller` contract.
 
 `Controller` follows [DelegateProxy](https://eips.ethereum.org/EIPS/eip-897) pattern for upgradablity.
 
