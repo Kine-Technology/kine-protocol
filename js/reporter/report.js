@@ -4,8 +4,8 @@ const myPrivateKey = fs.readFileSync('../../.secret.ropstenDeployer').toString()
 const BigNumber = require("bignumber.js");
 
 const abiJson = require("../../build/contracts/Kaptain.json")
-// const addressObj = require("../../network/ropsten.json")
-const addressObj = require("../../network/ropsten-uat.json")
+const addressObj = require("../../network/ropsten.json")
+// const addressObj = require("../../network/ropsten-uat.json")
 
 let kaptain = new web3HD.eth.Contract(abiJson.abi, addressObj.Kaptain.address);
 let kaptain1 = new web3.eth.Contract(abiJson.abi, addressObj.Kaptain.address);

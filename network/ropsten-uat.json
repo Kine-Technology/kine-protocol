@@ -12,6 +12,12 @@
     "block": 9496376,
     "gas used": 1680554
   },
+  "kineMultiSig 2/2": {
+    "transaction": "0x2d6ccc1d1ec875c641c7b29344280b8ee0ec029a1a554862ba76212ff20865c8",
+    "address": "0x0A4B23030ebdF3781668359cBF811D3DD9a27dCb",
+    "block": 9583883,
+    "gas used": 1704538
+  },
   "tokens": {
     "USDC": "0x433afe89B4e317bbE708Eef3C1b4FFB9401cED3E",
     "KINE": "0x5991f1c1EB3fc374F65ED948A615504c2aEa967C",
