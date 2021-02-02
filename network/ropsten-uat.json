@@ -1,10 +1,10 @@
 {
   "oracle": "0x56F45bB3a646aCB557B8Eb462fE6342DB8D40C88",
   "timelock_test": {
-    "transaction": "0x5139bb6a3b248bf3799295a00c328d54d6144d40781a6ec3235831491a2e3f0b",
-    "address": "0xB796B83d664C795C384f0Bef6d806bd35f16718E",
-    "block": 9507751,
-    "gas used": 1384840
+    "transaction": "0x9c466cf445ff6f1ec54066f9cdf8ca684fad7e01fdfb542dd7ade925b7deac15",
+    "address": "0xD94321A1f4DF3E5e60bB87832bFc4DDc9876DcB9",
+    "block": 9584950,
+    "gas used": 1385272
   },
   "kineMultiSigWallet":{
     "transaction": "0x9422d3e44832cf1da6a03da6932f9cb8764dd58ca11dd512c945c4ef2df50eaf",
