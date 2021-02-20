@@ -4,8 +4,9 @@ const myPrivateKey = fs.readFileSync('../../.secret.ropstenDeployer').toString()
 const BigNumber = require("bignumber.js");
 
 const abiJson = require("../../build/contracts/Kaptain.json")
-const addressObj = require("../../network/ropsten.json")
-// const addressObj = require("../../network/ropsten-uat.json")
+// const addressObj = require("../../network/ropsten-dev.json")
+const addressObj = require("../../network/ropsten-uat.json")
+// const addressObj = require("../../network/ropsten-uat-2.json")
 
 let kaptain = new web3HD.eth.Contract(abiJson.abi, addressObj.Kaptain.address);
 let kaptain1 = new web3.eth.Contract(abiJson.abi, addressObj.Kaptain.address);
@@ -15,7 +16,7 @@ post();
 async function post() {
     let priceData = {
         prices: {
-            "KINE": 2.8
+            "KINE": 2.0
         },
         symbols: ['KINE']
     };

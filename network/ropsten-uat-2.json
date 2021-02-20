@@ -1,0 +1,172 @@
+{
+  "oracle": "0xE00Fe2495D4ff38526e7c807e24A46DDbf2AfB8d",
+  "timelock_test": {
+    "transaction": "0x9c466cf445ff6f1ec54066f9cdf8ca684fad7e01fdfb542dd7ade925b7deac15",
+    "address": "0xD94321A1f4DF3E5e60bB87832bFc4DDc9876DcB9",
+    "block": 9584950,
+    "gas used": 1385272
+  },
+  "kineMultiSigWallet":{
+    "transaction": "0x9422d3e44832cf1da6a03da6932f9cb8764dd58ca11dd512c945c4ef2df50eaf",
+    "address": "0x16E43954ca4B5c19cd8C7edD721ECa0242b0C4c9",
+    "block": 9496376,
+    "gas used": 1680554
+  },
+  "kineMultiSig 2/2": {
+    "transaction": "0x2d6ccc1d1ec875c641c7b29344280b8ee0ec029a1a554862ba76212ff20865c8",
+    "address": "0x0A4B23030ebdF3781668359cBF811D3DD9a27dCb",
+    "block": 9583883,
+    "gas used": 1704538
+  },
+  "tokens": {
+    "USDC": "0x433afe89B4e317bbE708Eef3C1b4FFB9401cED3E",
+    "KINE": "0x5991f1c1EB3fc374F65ED948A615504c2aEa967C",
+    "WBTC": "0xB593F5511a2189f44Eb855Be159d3dEc41fe782d",
+    "USDT": "0xC70BA587d226374040De741b08A9096EDC6744aE"
+  },
+  "Controller": {
+    "transaction": "0x35ae692a72c94d5788e702918193c1ed20a9b29641d73e55f8c4270cb01a3b14",
+    "address": "0x6678cD1cAc973fA5A86CBfF736F93b28b9E1Cc26",
+    "block": 9692479,
+    "gas used": 3204856
+  },
+  "Unitroller": {
+    "transaction": "0xc47aa4b68a676ef5e76b751043800816015b08206edb8cd2df5fc0eec38b53b9",
+    "address": "0xa0FC3e1771bfc5c169b78E3487246a3b01d5D19e",
+    "block": 9692486,
+    "gas used": 405650
+  },
+  "KMCD": {
+    "delegate": {
+      "transaction": "0x21f1bc0cc4f696f241d46dcd5dbfa1e05ed3a85b5c88afc4cb638f37e433c1f6",
+      "address": "0x32Dd5B3Cda39e13790c05ab7f4828c9b218Ad056",
+      "block": 9692527,
+      "gas used": 1850414,
+      "contract": "KMCDDelegate.sol"
+    },
+    "delegator": {
+      "transaction": "0xad2b9996b6a8f73b0aceaeb3a7d558923929c1debd4dd4add7c5579923a13861",
+      "address": "0x2BBa673c96EAf02c533942fa0bC7Bb08ced4A1EF",
+      "block": 9692535,
+      "gas used": 734960,
+      "contract": "KMCDDelegator.sol"
+    }
+  },
+  "KUSDMinter": {
+    "minter": {
+      "transaction": "0x1891a9db7f0337f8c23a0321fde1ea6871e786aa2166a746b588a1d7de4faa3b",
+      "address": "0x218e68965106Ccef308b2fb23dBe983B250D9BD7",
+      "block": 9692554,
+      "gas used": 2811144,
+      "contract": "KUSDMinter"
+    },
+    "delegator": {
+      "transaction": "0xb9447955b64dab816b0301a5698764b32f6cc663818686c70442ffa443817c26",
+      "address": "0x87CAc29A7C6cc6fE39FAa7c89FDdF2EeA5Ddc995",
+      "block": 9692564,
+      "gas used": 604664,
+      "contract": "KUSDMinterDelegator"
+    }
+  },
+  "KineUSD": {
+    "transaction": "0x2fc264e356726b7c18e3efc994168a1ecc10cbaeca162e459d62c180c821cd22",
+    "address": "0x27d33B2eF2f6235B656D13A42b029Df0d6A5eD39",
+    "block": 9692548,
+    "gas used": 1838332
+  },
+  "KUSDVault": {
+    "transaction": "0x975c0748c574e42e19f35912dcf8fa791f514fb5a74579083937828c3902c2ce",
+    "address": "0xbA802eeC5D8dA24c914046bd36b0A65f9f133AdD",
+    "block": 9692579,
+    "gas used": 860832
+  },
+  "KineTreasury": {
+    "transaction": "0x13027849e63cc322d05b5f64d328dd10817b8bac800470bbebbe9ffe00038e95",
+    "address": "0xF0e5ad0C31Fafc1482ab1FAa18F63E9dd97EA8FE",
+    "block": 9692583,
+    "gas used": 687930
+  },
+  "Kaptain": {
+    "transaction": "0x0acc74e0ee3785198e8d9e214f334a865401689f3a9361693f192b90d1e167e3",
+    "address": "0x4710f49CdbB09F3b5906C43F466B08d294F45e96",
+    "block": 9692593,
+    "gas used": 1412445
+  },
+  "KTokens": {
+    "kETH": {
+      "transaction": "0x87321c62597615f46bc8bd6478bc9178d941e417589a8866e86a37554c152913",
+      "address": "0x55850A8F09C47ad92c579011834CB38096C7A7D4",
+      "block": 9693092,
+      "gas used": 2163484,
+      "contract": "KEther"
+    },
+    "kUSDC": {
+      "underlying": "0x433afe89B4e317bbE708Eef3C1b4FFB9401cED3E",
+      "delegate": {
+        "transaction": "0x4fd15712ec082cba4056489ebbdd2340c5d93012eb401e7a55e6e38b65e15204",
+        "address": "0x993Bbd003bCEB81f4ED24924CAb587F3A7CFCCa3",
+        "block": 9693095,
+        "gas used": 2366584,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0x66c55d2256060fac4227d15740d8ab0f5ed255600b1a611bdb6cc5a2af7f8e6d",
+        "address": "0x38431ac20Dcd39E881de17701A6e555F91A39ECe",
+        "block": 9693098,
+        "gas used": 1369860,
+        "contract": "KErc20Delegator.sol"
+      }
+    },
+    "kKine": {
+      "underlying": "0x5991f1c1EB3fc374F65ED948A615504c2aEa967C",
+      "delegate": {
+        "transaction": "0x84d9e3ffb49028bf73c0ba3707750b2771c1fcb5a753d513fffae6077a994568",
+        "address": "0x94d079ED79367e0dA46F35c45E155E574480D1e7",
+        "block": 9693108,
+        "gas used": 2366584,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0xa9377ea1f57631964e2e2de5d75fcde5c1dc184542faecc63e34c4403230be5f",
+        "address": "0xf70807276D24e76B881FdA908f135d253ea3EF81",
+        "block": 9693110,
+        "gas used": 1369849,
+        "contract": "KErc20Delegator.sol"
+      }
+    },
+    "kWBTC": {
+      "underlying": "0xB593F5511a2189f44Eb855Be159d3dEc41fe782d",
+      "delegate": {
+        "transaction": "0xde2d09bcdddf0426118fb643bfca7551a17e2196ad3c404bfa257704a341e329",
+        "address": "0xC875eE6D48700FCe1e862b9A8d5b7655Ed1456fB",
+        "block": 9693123,
+        "gas used": 2366584,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0x90f7190792aec8998fdd12302bdedb89c064437113b9ad13120a0e7fd2166fa0",
+        "address": "0x2176D1620A847c32694FD22511BbAcb4AaF87cdE",
+        "block": 9693124,
+        "gas used": 1369872,
+        "contract": "KErc20Delegator.sol"
+      }
+    },
+    "kUSDT": {
+      "underlying": "0xC70BA587d226374040De741b08A9096EDC6744aE",
+      "delegate": {
+        "transaction": "0xdd8f7a64990785b0b385ed32f4b160f83cceff93c346140b64a42ab3f3be56db",
+        "address": "0xc2a07b4d58497eb31b583581Eb5775aecf2899fe",
+        "block": 9693133,
+        "gas used": 2366584,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0xa56aed200e56e8117e8a6a0ca8ab1bbee65f36a78adcebb29da4a8657767ad15",
+        "address": "0x0Ec17051b94d8cfDd9c75e91453BD0DF54c9bee8",
+        "block": 9693135,
+        "gas used": 1370858,
+        "contract": "KErc20Delegator.sol"
+      }
+    }
+  }
+}
