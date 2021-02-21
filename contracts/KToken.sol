@@ -304,6 +304,9 @@ contract KToken is KTokenInterface, Exponential, KTokenErrorReporter {
         /////////////////////////
         // EFFECTS & INTERACTIONS
 
+        /* We write previously calculated values into storage */
+        totalSupply = vars.totalSupplyNew;
+        accountTokens[redeemer] = vars.accountTokensNew;
         /*
          * We invoke doTransferOut for the redeemer and the redeemAmount.
          *  Note: The kToken must handle variations between ERC-20 and ETH underlying.
@@ -311,10 +314,6 @@ contract KToken is KTokenInterface, Exponential, KTokenErrorReporter {
          *  doTransferOut reverts if anything goes wrong, since we can't be sure if side effects occurred.
          */
         doTransferOut(redeemer, redeemTokensIn);
-
-        /* We write previously calculated values into storage */
-        totalSupply = vars.totalSupplyNew;
-        accountTokens[redeemer] = vars.accountTokensNew;
 
         /* We emit a Transfer event, and a Redeem event */
         emit Transfer(redeemer, address(this), redeemTokensIn);
