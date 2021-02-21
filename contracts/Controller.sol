@@ -457,6 +457,12 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
             return (allowed, reason);
         }
 
+        if (KToken(kTokenCollateral).controller() != KToken(kTokenBorrowed).controller()) {
+            allowed = false;
+            reason = CONTROLLER_MISMATCH;
+            return (allowed, reason);
+        }
+
         /* The borrower must have shortfall in order to be liquidatable */
         (, uint shortfall) = getAccountLiquidityInternal(borrower);
         if (shortfall == 0) {
