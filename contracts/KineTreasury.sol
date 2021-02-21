@@ -1,12 +1,15 @@
 pragma solidity ^0.5.16;
 
 import "./IERC20.sol";
+import "./SafeERC20.sol";
 
 /**
  * @title KineTreasury stores the Kine tokens.
  * @author Kine
  */
 contract KineTreasury {
+    using SafeERC20 for IERC20;
+
     // @notice Emitted when pendingAdmin is changed
     event NewPendingAdmin(address oldPendingAdmin, address newPendingAdmin);
 
@@ -48,7 +51,7 @@ contract KineTreasury {
         uint balance = kine.balanceOf(address(this));
         require(balance >= amount, "not enough kine balance");
         // transfer kine
-        bool success = kine.transfer(target, amount);
+        bool success = kine.safeTransfer(target, amount);
         require(success, "transfer failed");
 
         emit TransferKine(target, amount);
@@ -61,7 +64,7 @@ contract KineTreasury {
         uint balance = erc20.balanceOf(address(this));
         require(balance >= amount, "not enough erc20 balance");
         // transfer token
-        erc20.transfer(target, amount);
+        erc20.safeTransfer(target, amount);
 
         emit TransferErc20(erc20Addr, target, amount);
     }

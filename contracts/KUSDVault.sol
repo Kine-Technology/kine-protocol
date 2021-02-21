@@ -1,6 +1,7 @@
 pragma solidity ^0.5.16;
 
 import "./IERC20.sol";
+import "./SafeERC20.sol";
 
 /**
  * @title KUSDVault stores the Kine off-chain trading system's kUSD. When total vault of synthetic assets in Kine trading system changed, Kine reporter will mint/burn corresponding
@@ -8,6 +9,8 @@ import "./IERC20.sol";
  * @author Kine
  */
 contract KUSDVault {
+    using SafeERC20 for IERC20;
+
     // @notice Emitted when pendingAdmin is changed
     event NewPendingAdmin(address oldPendingAdmin, address newPendingAdmin);
 
@@ -64,7 +67,7 @@ contract KUSDVault {
         uint balance = kUSD.balanceOf(address(this));
         require(balance >= amount, "not enough kUSD balance");
         // transferKusd
-        bool success = kUSD.transfer(counterParty, amount);
+        bool success = kUSD.safeTransfer(counterParty, amount);
         require(success, "transfer failed");
 
         emit TransferKusd(counterParty, amount);
@@ -77,7 +80,7 @@ contract KUSDVault {
         uint balance = erc20.balanceOf(address(this));
         require(balance >= amount, "not enough erc20 balance");
         // transfer token
-        erc20.transfer(target, amount);
+        erc20.safeTransfer(target, amount);
 
         emit TransferErc20(erc20Addr, target, amount);
     }
