@@ -104,8 +104,14 @@ contract KUSDMinter is IRewardDistributionRecipient {
     event NewController(address oldController, address newController);
 
     /**
-     * @notice Implementation address slot for delegation mode;
-     */
+     * @notice This is for avoiding reward calculation overflow (see https://sips.synthetix.io/sips/sip-77)
+     * 1.15792e59 < uint(-1) / 1e18
+    */
+    uint public constant REWARD_OVERFLOW_CHECK = 1.15792e59;
+
+/**
+ * @notice Implementation address slot for delegation mode;
+ */
     address public implementation;
 
     /// @notice Flag to mark if this contract has been initialized before
@@ -461,22 +467,30 @@ contract KUSDMinter is IRewardDistributionRecipient {
      * @notice Notify rewards has been added, trigger a new round of reward period, recalculate reward rate and duration end time.
      * If distributor notify rewards before this round duration end time, then the leftover rewards of this round will roll over to
      * next round and will be distributed together with new rewards in next round of reward period.
-     * Notify will fail if hasn't reach start time.
      * @param reward How many of rewards has been added for new round of reward period.
      */
     function notifyRewardAmount(uint reward) external onlyRewardDistribution updateReward(address(0)) {
         if (block.timestamp > startTime) {
             if (block.timestamp >= periodFinish) {
+                // @dev to avoid of rewardPerToken calculation overflow (see https://sips.synthetix.io/sips/sip-77), we check the reward to be inside a properate range
+                // which is 2^256 / 10^18
+                require(reward < REWARD_OVERFLOW_CHECK, "reward rate will overflow");
                 rewardRate = reward.div(rewardDuration);
             } else {
                 uint remaining = periodFinish.sub(block.timestamp);
                 uint leftover = remaining.mul(rewardRate);
+                // @dev to avoid of rewardPerToken calculation overflow (see https://sips.synthetix.io/sips/sip-77), we check the reward to be inside a properate range
+                // which is 2^256 / 10^18
+                require(reward.add(leftover) < REWARD_OVERFLOW_CHECK, "reward rate will overflow");
                 rewardRate = reward.add(leftover).div(rewardDuration);
             }
             lastUpdateTime = block.timestamp;
             periodFinish = block.timestamp.add(rewardDuration);
             emit RewardAdded(reward);
         } else {
+            // @dev to avoid of rewardPerToken calculation overflow (see https://sips.synthetix.io/sips/sip-77), we check the reward to be inside a properate range
+            // which is 2^256 / 10^18
+            require(reward < REWARD_OVERFLOW_CHECK, "reward rate will overflow");
             rewardRate = reward.div(rewardDuration);
             lastUpdateTime = startTime;
             periodFinish = startTime.add(rewardDuration);
