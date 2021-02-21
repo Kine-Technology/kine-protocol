@@ -202,7 +202,9 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
 
         // copy last item in list to location of item to be removed, reduce length by 1
         KToken[] storage storedList = accountAssets[msg.sender];
-        storedList[assetIndex] = storedList[storedList.length - 1];
+        if (assetIndex != storedList.length - 1) {
+            storedList[assetIndex] = storedList[storedList.length - 1];
+        }
         storedList.length--;
 
         emit MarketExited(kToken, msg.sender);
@@ -293,7 +295,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
         if (shortfall > 0) {
             allowed = false;
             reason = INSUFFICIENT_LIQUIDITY;
-            return  (allowed, reason);
+            return (allowed, reason);
         }
 
         allowed = true;
