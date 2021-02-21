@@ -33,6 +33,8 @@ contract ControllerErrorReporter {
     string internal constant TOO_MUCH_REPAY = "TOO_MUCH_REPAY";
     string internal constant CONTROLLER_MISMATCH = "CONTROLLER_MISMATCH";
     string internal constant INVALID_COLLATERAL_FACTOR = "INVALID_COLLATERAL_FACTOR";
+    string internal constant INVALID_CLOSE_FACTOR = "INVALID_CLOSE_FACTOR";
+    string internal constant INVALID_LIQUIDATION_INCENTIVE = "INVALID_LIQUIDATION_INCENTIVE";
 }
 
 contract KTokenErrorReporter {

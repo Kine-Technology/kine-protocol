@@ -77,6 +77,12 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     // closeFactorMantissa must not exceed this value
     uint internal constant closeFactorMaxMantissa = 0.9e18; // 0.9
 
+    // liquidationIncentiveMantissa must be no less than this value
+    uint internal constant liquidationIncentiveMinMantissa = 1.0e18; // 1.0
+
+    // liquidationIncentiveMantissa must be no greater than this value
+    uint internal constant liquidationIncentiveMaxMantissa = 1.5e18; // 1.5
+
     // No collateralFactorMantissa may exceed this value
     uint internal constant collateralFactorMaxMantissa = 0.9e18; // 0.9
 
@@ -784,6 +790,9 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
       * @param newCloseFactorMantissa New close factor, scaled by 1e18
       */
     function _setCloseFactor(uint newCloseFactorMantissa) external onlyAdmin() {
+        require(newCloseFactorMantissa <= closeFactorMaxMantissa, INVALID_CLOSE_FACTOR);
+        require(newCloseFactorMantissa >= closeFactorMinMantissa, INVALID_CLOSE_FACTOR);
+
         uint oldCloseFactorMantissa = closeFactorMantissa;
         closeFactorMantissa = newCloseFactorMantissa;
         emit NewCloseFactor(oldCloseFactorMantissa, closeFactorMantissa);
@@ -823,6 +832,9 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
       * @param newLiquidationIncentiveMantissa New liquidationIncentive scaled by 1e18
       */
     function _setLiquidationIncentive(uint newLiquidationIncentiveMantissa) external onlyAdmin() {
+        require(newLiquidationIncentiveMantissa <= liquidationIncentiveMaxMantissa, INVALID_LIQUIDATION_INCENTIVE);
+        require(newLiquidationIncentiveMantissa >= liquidationIncentiveMinMantissa, INVALID_LIQUIDATION_INCENTIVE);
+
         uint oldLiquidationIncentiveMantissa = liquidationIncentiveMantissa;
         liquidationIncentiveMantissa = newLiquidationIncentiveMantissa;
         emit NewLiquidationIncentive(oldLiquidationIncentiveMantissa, newLiquidationIncentiveMantissa);
