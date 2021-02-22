@@ -280,7 +280,7 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     function redeemAllowedInternal(address kToken, address redeemer, uint redeemTokens) internal view returns (bool allowed, string memory reason) {
         if (!markets[kToken].isListed) {
             allowed = false;
-            reason = EXIT_MARKET_REJECTION;
+            reason = MARKET_NOT_LISTED;
             return (allowed, reason);
         }
 
