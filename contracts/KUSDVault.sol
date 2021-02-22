@@ -67,9 +67,7 @@ contract KUSDVault {
         uint balance = kUSD.balanceOf(address(this));
         require(balance >= amount, "not enough kUSD balance");
         // transferKusd
-        bool success = kUSD.safeTransfer(counterParty, amount);
-        require(success, "transfer failed");
-
+        kUSD.safeTransfer(counterParty, amount);
         emit TransferKusd(counterParty, amount);
     }
 
@@ -151,7 +149,7 @@ contract KUSDVault {
 
     // allow to recieve ether
     function() external payable {
-        if(msg.value > 0) {
+        if (msg.value > 0) {
             emit RecieveEther(msg.value);
         }
     }

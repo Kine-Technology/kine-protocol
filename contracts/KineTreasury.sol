@@ -51,9 +51,7 @@ contract KineTreasury {
         uint balance = kine.balanceOf(address(this));
         require(balance >= amount, "not enough kine balance");
         // transfer kine
-        bool success = kine.safeTransfer(target, amount);
-        require(success, "transfer failed");
-
+        kine.safeTransfer(target, amount);
         emit TransferKine(target, amount);
     }
 
