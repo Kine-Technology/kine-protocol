@@ -26,7 +26,7 @@ contract KineTreasury {
     event TransferEther(address indexed target, uint amount);
 
     // @notice Emitted when Ehter recieved
-    event RecieveEther(uint amount);
+    event ReceiveEther(uint amount);
 
     // @notice Emitted when Kine changed
     event NewKine(address oldKine, address newKine);
@@ -120,7 +120,7 @@ contract KineTreasury {
     // allow to recieve ether
     function() external payable {
         if(msg.value > 0) {
-            emit RecieveEther(msg.value);
+            emit ReceiveEther(msg.value);
         }
     }
 }

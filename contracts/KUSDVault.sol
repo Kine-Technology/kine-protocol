@@ -27,7 +27,7 @@ contract KUSDVault {
     event TransferEther(address indexed target, uint amount);
 
     // @notice Emitted when Ehter recieved
-    event RecieveEther(uint amount);
+    event ReceiveEther(uint amount);
 
     // @notice Emitted when operator changed
     event NewOperator(address oldOperator, address newOperator);
@@ -150,7 +150,7 @@ contract KUSDVault {
     // allow to recieve ether
     function() external payable {
         if (msg.value > 0) {
-            emit RecieveEther(msg.value);
+            emit ReceiveEther(msg.value);
         }
     }
 }
