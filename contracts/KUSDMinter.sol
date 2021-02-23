@@ -277,7 +277,7 @@ contract KUSDMinter is IRewardDistributionRecipient {
     function claimable(address account) external view returns (uint) {
         uint accountNewAccruedReward = earned(account);
         uint pastTime = block.timestamp.sub(accountRewardDetails[account].lastClaimTime);
-        uint maturedReward = accountNewAccruedReward.mul(1e18).div(rewardReleasePeriod).mul(pastTime).div(1e18);
+        uint maturedReward = accountNewAccruedReward.mul(pastTime).div(rewardReleasePeriod);
         if (maturedReward > accountNewAccruedReward) {
             maturedReward = accountNewAccruedReward;
         }
@@ -451,12 +451,12 @@ contract KUSDMinter is IRewardDistributionRecipient {
         uint reward = accountRewardDetails[msg.sender].accruedReward;
         if (reward > 0) {
             uint pastTime = block.timestamp.sub(accountRewardDetails[msg.sender].lastClaimTime);
-            uint maturedReward = reward.mul(1e18).mul(pastTime).div(rewardReleasePeriod).div(1e18);
+            uint maturedReward = reward.mul(pastTime).div(rewardReleasePeriod);
             if (maturedReward > reward) {
                 maturedReward = reward;
             }
 
-            accountRewardDetails[msg.sender].accruedReward = accountRewardDetails[msg.sender].accruedReward.sub(maturedReward);
+            accountRewardDetails[msg.sender].accruedReward = reward.sub(maturedReward);
             accountRewardDetails[msg.sender].lastClaimTime = block.timestamp;
             kine.safeTransfer(msg.sender, maturedReward);
             emit RewardPaid(msg.sender, maturedReward);
