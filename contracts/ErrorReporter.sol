@@ -27,6 +27,7 @@ contract ControllerErrorReporter {
     string internal constant SEIZE_PAUSED = "SEIZE_PAUSED";
     string internal constant TRANSFER_PAUSED = "TRANSFER_PAUSED";
     string internal constant MARKET_BORROW_CAP_REACHED = "MARKET_BORROW_CAP_REACHED";
+    string internal constant MARKET_SUPPLY_CAP_REACHED = "MARKET_SUPPLY_CAP_REACHED";
     string internal constant REDEEM_TOKENS_ZERO = "REDEEM_TOKENS_ZERO";
     string internal constant INSUFFICIENT_LIQUIDITY = "INSUFFICIENT_LIQUIDITY";
     string internal constant INSUFFICIENT_SHORTFALL = "INSUFFICIENT_SHORTFALL";

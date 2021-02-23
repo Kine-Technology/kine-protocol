@@ -68,8 +68,11 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     /// @notice Emitted when borrow cap for a kToken is changed
     event NewBorrowCap(KToken indexed kToken, uint newBorrowCap);
 
-    /// @notice Emitted when borrow cap guardian is changed
-    event NewBorrowCapGuardian(address oldBorrowCapGuardian, address newBorrowCapGuardian);
+    /// @notice Emitted when supply cap for a kToken is changed
+    event NewSupplyCap(KToken indexed kToken, uint newSupplyCap);
+
+    /// @notice Emitted when borrow/supply cap guardian is changed
+    event NewCapGuardian(address oldCapGuardian, address newCapGuardian);
 
     // closeFactorMantissa must be strictly greater than this value
     uint internal constant closeFactorMinMantissa = 0.05e18; // 0.05
@@ -226,9 +229,20 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
             return (allowed, reason);
         }
 
+        uint supplyCap = supplyCaps[kToken];
+        // Supply cap of 0 corresponds to unlimited supplying
+        if (supplyCap != 0) {
+            uint totalSupply = KToken(kToken).totalSupply();
+            uint nextTotalSupply = totalSupply.add(mintAmount);
+            if (nextTotalSupply > supplyCap) {
+                allowed = false;
+                reason = MARKET_SUPPLY_CAP_REACHED;
+                return (allowed, reason);
+            }
+        }
+
         // Shh - currently unused
         minter;
-        mintAmount;
 
         if (!markets[kToken].isListed) {
             allowed = false;
@@ -870,12 +884,12 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
 
     /**
       * @notice Set the given borrow caps for the given kToken markets. Borrowing that brings total borrows to or above borrow cap will revert.
-      * @dev Admin or borrowCapGuardian function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
+      * @dev Admin or capGuardian can call this function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
       * @param kTokens The addresses of the markets (tokens) to change the borrow caps for
       * @param newBorrowCaps The new borrow cap values in underlying to be set. A value of 0 corresponds to unlimited borrowing.
       */
     function _setMarketBorrowCaps(KToken[] calldata kTokens, uint[] calldata newBorrowCaps) external {
-        require(msg.sender == admin || msg.sender == borrowCapGuardian, "only admin or borrow cap guardian can set borrow caps");
+        require(msg.sender == admin || msg.sender == capGuardian, "only admin or cap guardian can set borrow caps");
 
         uint numMarkets = kTokens.length;
         uint numBorrowCaps = newBorrowCaps.length;
@@ -889,13 +903,33 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
     }
 
     /**
-     * @notice Admin function to change the Borrow Cap Guardian
-     * @param newBorrowCapGuardian The address of the new Borrow Cap Guardian
+      * @notice Set the given supply caps for the given kToken markets. Supplying that brings total supply to or above supply cap will revert.
+      * @dev Admin or capGuardian can call this function to set the supply caps. A supply cap of 0 corresponds to unlimited supplying.
+      * @param kTokens The addresses of the markets (tokens) to change the supply caps for
+      * @param newSupplyCaps The new supply cap values in underlying to be set. A value of 0 corresponds to unlimited supplying.
+      */
+    function _setMarketSupplyCaps(KToken[] calldata kTokens, uint[] calldata newSupplyCaps) external {
+        require(msg.sender == admin || msg.sender == capGuardian, "only admin or cap guardian can set supply caps");
+
+        uint numMarkets = kTokens.length;
+        uint numSupplyCaps = newSupplyCaps.length;
+
+        require(numMarkets != 0 && numMarkets == numSupplyCaps, "invalid input");
+
+        for (uint i = 0; i < numMarkets; i++) {
+            supplyCaps[address(kTokens[i])] = newSupplyCaps[i];
+            emit NewSupplyCap(kTokens[i], newSupplyCaps[i]);
+        }
+    }
+
+    /**
+     * @notice Admin function to change the Borrow and Supply Cap Guardian
+     * @param newCapGuardian The address of the new Cap Guardian
      */
-    function _setBorrowCapGuardian(address newBorrowCapGuardian) external onlyAdmin() {
-        address oldBorrowCapGuardian = borrowCapGuardian;
-        borrowCapGuardian = newBorrowCapGuardian;
-        emit NewBorrowCapGuardian(oldBorrowCapGuardian, newBorrowCapGuardian);
+    function _setCapGuardian(address newCapGuardian) external onlyAdmin() {
+        address oldCapGuardian = capGuardian;
+        capGuardian = newCapGuardian;
+        emit NewCapGuardian(oldCapGuardian, newCapGuardian);
     }
 
     /**

@@ -100,8 +100,8 @@ contract ControllerStorage is UnitrollerAdminStorage {
      *  Liquidation / seizing / transfer can only be paused globally, not by market.
      */
     address public pauseGuardian;
-    // @notice The borrowCapGuardian can set borrowCaps to any number for any market. Lowering the borrow cap could disable borrowing on the given market.
-    address public borrowCapGuardian;
+    // @notice The capGuardian can set borrowCaps/supplyCaps to any number for any market. Lowering the borrow/supply cap could disable borrowing/supplying on the given market.
+    address public capGuardian;
     bool public transferGuardianPaused;
     bool public seizeGuardianPaused;
     mapping(address => bool) public mintGuardianPaused;
@@ -109,4 +109,7 @@ contract ControllerStorage is UnitrollerAdminStorage {
 
     // @notice Borrow caps enforced by borrowAllowed for each kToken address. Defaults to zero which corresponds to unlimited borrowing.
     mapping(address => uint) public borrowCaps;
+    // @notice Supply caps enforced by mintAllowed for each kToken address. Defaults to zero which corresponds to unlimited supplying.
+    mapping(address => uint) public supplyCaps;
+
 }
