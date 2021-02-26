@@ -189,7 +189,6 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
     }
 
     struct RepayBorrowLocalVars {
-        uint repayAmount;
         uint accountBorrows;
         uint accountBorrowsNew;
         uint totalBorrowsNew;
@@ -212,32 +211,25 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
         /* We fetch the amount the borrower owes */
         vars.accountBorrows = accountBorrows[borrower];
 
-        /* If repayAmount == -1, repayAmount = accountBorrows */
-        if (repayAmount == uint(- 1)) {
-            vars.repayAmount = vars.accountBorrows;
-        } else {
-            vars.repayAmount = repayAmount;
-        }
-
         /*
          * We calculate the new borrower and total borrow balances, failing on underflow:
          *  accountBorrowsNew = accountBorrows - actualRepayAmount
          *  totalBorrowsNew = totalBorrows - actualRepayAmount
          */
-        vars.accountBorrowsNew = vars.accountBorrows.sub(vars.repayAmount, REPAY_BORROW_NEW_ACCOUNT_BORROW_BALANCE_CALCULATION_FAILED);
-        vars.totalBorrowsNew = totalBorrows.sub(vars.repayAmount, REPAY_BORROW_NEW_TOTAL_BALANCE_CALCULATION_FAILED);
+        vars.accountBorrowsNew = vars.accountBorrows.sub(repayAmount, REPAY_BORROW_NEW_ACCOUNT_BORROW_BALANCE_CALCULATION_FAILED);
+        vars.totalBorrowsNew = totalBorrows.sub(repayAmount, REPAY_BORROW_NEW_TOTAL_BALANCE_CALCULATION_FAILED);
 
         /* We write the previously calculated values into storage */
         accountBorrows[borrower] = vars.accountBorrowsNew;
         totalBorrows = vars.totalBorrowsNew;
 
         /* We emit a RepayBorrow event */
-        emit RepayBorrow(payer, borrower, vars.repayAmount, vars.accountBorrowsNew, vars.totalBorrowsNew);
+        emit RepayBorrow(payer, borrower, repayAmount, vars.accountBorrowsNew, vars.totalBorrowsNew);
 
         /* We call the defense hook */
-        controller.repayBorrowVerify(address(this), payer, borrower, vars.repayAmount);
+        controller.repayBorrowVerify(address(this), payer, borrower, repayAmount);
 
-        return vars.repayAmount;
+        return repayAmount;
     }
 
     /**
