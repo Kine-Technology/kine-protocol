@@ -29,7 +29,8 @@ const Web3 = require('web3');
 const net = require('net');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const mnemonicRopsten = fs.readFileSync(".secret.ropstenDeployer").toString().trim();
-const rpcWs = fs.readFileSync(".rpcWs").toString().trim();
+const rpcWsRopsten = fs.readFileSync(".rpcWs.ropsten").toString().trim();
+const rpcWsKovan = fs.readFileSync(".rpcWs.kovan").toString().trim();
 const etherscanKey = fs.readFileSync(".etherscanKey").toString().trim();
 
 module.exports = {
@@ -76,13 +77,24 @@ module.exports = {
         ropsten: {
             provider: () => new HDWalletProvider({
                 privateKeys: [mnemonicRopsten],
-                providerOrUrl: rpcWs
+                providerOrUrl: rpcWsRopsten
             }),
             network_id: 3,       // Ropsten's id
             gas: 5500000,        // Ropsten has a lower block limit than mainnet
             confirmations: 0,    // # of confs to wait between deployments. (default: 0)
             timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
             skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+        },
+        kovan: {
+            provider: () => new HDWalletProvider({
+                privateKeys: [mnemonicRopsten],
+                providerOrUrl: rpcWsKovan
+            }),
+            network_id: 42,
+            gas: 5500000,
+            confirmations: 0,
+            timeoutBlocks: 200,
+            skipDryRun: true
         },
         // Useful for private networks
         // private: {

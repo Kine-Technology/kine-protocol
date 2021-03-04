@@ -3,7 +3,7 @@
 build
 migrations
 js/local
-.rpcWs
+.rpcWs*
 .etherscanKey
 .deployer
 
