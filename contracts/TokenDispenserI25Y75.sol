@@ -2,20 +2,20 @@ pragma solidity ^0.5.16;
 
 import "./TokenDispenserBase.sol";
 
-contract TokenDispenserI25H75 is TokenDispenserBase {
+contract TokenDispenserI25Y75 is TokenDispenserBase {
     uint public year1EndTime;
     // @notice 25% vested immediately after launch. scaled by 1e18
     uint public constant immediateVestRatio = 25e16;
     // @notice 75% vested lineary in 1st year. scaled by 1e18
     uint public constant y1VestRatio = 75e16;
     // @notice the vest rate in first year is 0.75 / 365 days in seconds, scaled by 1e18
-    uint public constant y1rate = y1VestRatio / 10 minutes;
+    uint public constant y1rate = y1VestRatio / 365 days;
 
     constructor (address kine_, uint startTime_) public {
         kine = IERC20(kine_);
         startTime = startTime_;
         transferPaused = false;
-        year1EndTime = startTime_.add(10 minutes);
+        year1EndTime = startTime_.add(365 days);
     }
 
     function vestedPerAllocation() public view returns (uint) {
