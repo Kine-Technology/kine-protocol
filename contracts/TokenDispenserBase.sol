@@ -11,6 +11,7 @@ contract TokenDispenserBase is Context, Ownable {
 
     event TransferAllocation(address indexed sender, address indexed recipient, uint amount);
     event AddAllocation(address indexed recipient, uint addAllocation, uint newAllocation);
+    event ReplaceAllocation(address indexed oldAddress, address indexed newAddress, uint allocation);
     event TransferPaused();
     event TransferUnpaused();
     event AddTransferWhitelist(address account);
@@ -163,6 +164,35 @@ contract TokenDispenserBase is Context, Ownable {
         accountAllocations[recipient] = accountAllocations[recipient].add(amount);
         emit TransferAllocation(from, recipient, amount);
         return true;
+    }
+
+    // @notice Owner is able to replace accountVestedDetails address with a new one, in case of receipient give us an unoperateable address (like exchange address)
+    // The unclaimed allocations will all be transferred to new address including the vest status.
+    function replaceAccountWith(address oldAddress, address newAddress) external onlyOwner {
+        require(oldAddress != address(0), "replace from the zero address");
+        require(newAddress != address(0), "replace to the zero address");
+
+        uint allocation = accountAllocations[oldAddress];
+        AccountVestedDetail memory avd = accountVestedDetails[oldAddress];
+        AccountVestedDetail storage navd = accountVestedDetails[newAddress];
+
+        require(accountAllocations[newAddress] == 0, "new address already has allocation");
+        require(navd.vestedPerAllocationUpdated == 0, "new address already has vestedPerAllocationUpdated");
+
+        accountAllocations[newAddress] = allocation;
+        navd.accruedVested = avd.accruedVested;
+        navd.vestedPerAllocationUpdated = avd.vestedPerAllocationUpdated;
+        navd.claimed = avd.claimed;
+
+        transferWhitelist[newAddress] = true;
+
+        delete accountAllocations[oldAddress];
+        delete accountVestedDetails[oldAddress];
+        delete transferWhitelist[oldAddress];
+
+        emit RemoveTransferWhitelist(oldAddress);
+        emit AddTransferWhitelist(newAddress);
+        emit ReplaceAllocation(oldAddress, newAddress, allocation);
     }
 
     function addTransferWhitelist(address account) external onlyOwner {
