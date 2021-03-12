@@ -2,7 +2,7 @@ pragma solidity ^0.5.16;
 
 import "./TokenDispenserBase.sol";
 
-contract TokenDispenserI10Y60Y30 is TokenDispenserBase {
+contract TokenDispenserSeedI10Y60Y30 is TokenDispenserBase {
     uint public year1EndTime;
     uint public year2EndTime;
     // @notice 10% vested immediately after launch. scaled by 1e18
