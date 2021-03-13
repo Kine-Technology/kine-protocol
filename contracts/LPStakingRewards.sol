@@ -150,7 +150,7 @@ contract LPStakingRewards is Ownable, ReentrancyGuard {
         emit Withdrawn(msg.sender, amount);
     }
 
-    function getReward() public nonReentrant updateReward(msg.sender) {
+    function getReward() public nonReentrant afterCooldown updateReward(msg.sender) {
         uint reward = accountRewardDetails[msg.sender].accruedReward;
         if (reward > 0) {
             uint pastTime = block.timestamp.sub(accountRewardDetails[msg.sender].lastClaimTime);
