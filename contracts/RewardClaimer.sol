@@ -21,7 +21,7 @@ contract RewardClaimer is Ownable {
     bool public paused;
     IERC20 public kine;
     address public truthHolder;
-    mapping(uint => bool) public claimHistory;
+    mapping(uint => uint) public claimHistory;
     uint public claimCap;
 
     constructor (address kine_, address truthHolder_, uint claimCap_) public {
@@ -41,10 +41,10 @@ contract RewardClaimer is Ownable {
         require(source == truthHolder, "only accept truthHolder signed message");
 
         (uint256 id, address to, uint256 reward) = abi.decode(message, (uint256, address, uint256));
-        require(!claimHistory[id], "already claimed");
+        require(claimHistory[id] == 0, "already claimed");
         require(reward < claimCap, "reached claimCap limit");
 
-        claimHistory[id] = true;
+        claimHistory[id] = block.number;
         kine.safeTransfer(to, reward);
         emit RewardPaid(id, to, reward);
     }
