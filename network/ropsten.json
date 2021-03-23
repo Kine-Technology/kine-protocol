@@ -24,6 +24,12 @@
     "WBTC": "0xB593F5511a2189f44Eb855Be159d3dEc41fe782d",
     "USDT": "0xC70BA587d226374040De741b08A9096EDC6744aE"
   },
+  "RewardClaimer": {
+    "transaction": "0xfd4553dd26221ecaedea629fddbee4908af41ecd009f3913d9d7435852144c4d",
+    "address": "0x4c151967932D8814735a8446C2735a2e53Cf32AB",
+    "block": 9858538,
+    "gas used": 1197205
+  },
   "Controller": {
     "transaction": "0x35ae692a72c94d5788e702918193c1ed20a9b29641d73e55f8c4270cb01a3b14",
     "address": "0x6678cD1cAc973fA5A86CBfF736F93b28b9E1Cc26",
