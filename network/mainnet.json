@@ -147,6 +147,12 @@
     "block": 12086725,
     "gas used": 1412445
   },
+  "KineRanch": {
+    "transaction": "0x05f1d235e739f3b8987b742b13c49a42c5a5fa085d490644b4519aee697f2513",
+    "address": "0xa8d7643324DF0f38764F514Eb1a99D8f379Cc692",
+    "block": 12114477,
+    "gas used": 1396336
+  },
   "KTokens": {
     "kETH": {
       "transaction": "0x85715f094840aa26d6fd38dd131243d481769ba9b683aae3d99e1e9441f90fb7",
@@ -220,6 +226,23 @@
         "address": "0x63B63b5f0Ae8057cb8f704F65Fd91c19BadD5A73",
         "block": 12086878,
         "gas used": 1370747,
+        "contract": "KErc20Delegator.sol"
+      }
+    },
+    "kXKINE": {
+      "underlying": "0xa8d7643324DF0f38764F514Eb1a99D8f379Cc692",
+      "delegate": {
+        "transaction": "0x7cdcda8db971fb7c6d365af974707cf0754be8e33738e58ad2dca7859fbeb234",
+        "address": "0x24Ff636d8671CB8d35e63d6B36F26893818e57Af",
+        "block": 12114516,
+        "gas used": 2368535,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0x0bda9285aa3495f645230ad92b3e181a87f80328dc1fdf108a8b1992bbcf7a8d",
+        "address": "0x473ccDeC83B7125a4F52Aa6F8699026FCB878eE8",
+        "block": 12114524,
+        "gas used": 1369826,
         "contract": "KErc20Delegator.sol"
       }
     }
