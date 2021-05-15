@@ -28,7 +28,8 @@
     "USDC": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     "KINE": "0xCbfef8fdd706cde6F208460f2Bf39Aa9c785F05D",
     "WBTC": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "USDT": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+    "USDT": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "WOO": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B"
   },
   "dispenser seed": {
     "transaction": "0xb9a00f3688c2d2e738e6adfd8e5907facd2be8a3c2de1b8b99b3a28abecd0be8",
@@ -71,6 +72,18 @@
       "address": "0x834C3bB26bb1Bf025dc6B66aD5D7F9003333606b",
       "block": 12087665,
       "gas used": 1677222
+    }
+  },
+  "StakingRewardsV2": {
+    "WOO Rewards": {
+      "kUSD": {
+        "staking token": "0xd4c220CCaC0335334D425A90f58dE7C667896a06",
+        "reward token": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B",
+        "transaction": "0x91913f36d01b0bb63fd38b1995176711f28ad9b92df04f6664231b1ffadbe360",
+        "address": "0x67d920f8AFF096F86cac47a0CCf9f37483c9258f",
+        "block": 12413493,
+        "gas used": 1947858
+      }
     }
   },
   "RewardClaimer": {
@@ -243,6 +256,23 @@
         "address": "0x473ccDeC83B7125a4F52Aa6F8699026FCB878eE8",
         "block": 12114524,
         "gas used": 1369826,
+        "contract": "KErc20Delegator.sol"
+      }
+    },
+    "kWOO": {
+      "underlying": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B",
+      "delegate": {
+        "transaction": "0x992526ff31650746aae6e1d1c7a5a2e60fbb0664cd398b8f45655fbe743527b9",
+        "address": "0xeEBF195ED8a4a3a4cf4Fc74468dC850d48F0a139",
+        "block": 12400573,
+        "gas used": 2368535,
+        "contract": "KErc20Delegate"
+      },
+      "delegator": {
+        "transaction": "0xaf3a951ce4a6d4ab47a1cfb283bfe2a1bb64c84000bef0cf69fbca891983354f",
+        "address": "0xBF5250ac655920b301Ca34F4E46F0669b90a5BF5",
+        "block": 12400574,
+        "gas used": 1377442,
         "contract": "KErc20Delegator.sol"
       }
     }
