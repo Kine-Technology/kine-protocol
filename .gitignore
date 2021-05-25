@@ -5,7 +5,10 @@ migrations
 js/local
 .rpcWs*
 .etherscanKey
+.bscscanKey
+.oklinkKey
 .deployer
+.deployerbsc
 
 # idea
 .idea

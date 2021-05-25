@@ -2,6 +2,7 @@ pragma solidity ^0.5.16;
 
 import "./KToken.sol";
 import "./KineOracleInterface.sol";
+import "./ControllerStorage.sol";
 
 /**
 Copyright 2020 Compound Labs, Inc.
@@ -21,29 +22,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 *   3. combined different versions storage contracts into one.
 */
 
-contract UnitrollerAdminStorage {
-    /**
-    * @notice Administrator for this contract
-    */
-    address public admin;
-
-    /**
-    * @notice Pending administrator for this contract
-    */
-    address public pendingAdmin;
-
-    /**
-    * @notice Active brains of Unitroller
-    */
-    address public controllerImplementation;
-
-    /**
-    * @notice Pending brains of Unitroller
-    */
-    address public pendingControllerImplementation;
-}
-
-contract ControllerStorage is UnitrollerAdminStorage {
+contract ControllerStorageV1 is UnitrollerAdminStorage {
 
     struct Market {
         /// @notice Whether or not this market is listed
@@ -111,11 +90,5 @@ contract ControllerStorage is UnitrollerAdminStorage {
     mapping(address => uint) public borrowCaps;
     // @notice Supply caps enforced by mintAllowed for each kToken address. Defaults to zero which corresponds to unlimited supplying.
     mapping(address => uint) public supplyCaps;
-
-    /**
-     * @notice Multiplier representing the discount on collateral that a liquidator receives
-     * each kToken can have different liquidationIncentive, if liquidationIncentive is not specified for one kToken, will use global liquidationIncentiveMantissa as default
-     */
-    mapping(address => uint) public liquidationIncentivePerAsset;
 
 }

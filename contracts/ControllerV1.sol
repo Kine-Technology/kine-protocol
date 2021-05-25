@@ -5,10 +5,10 @@ import "./KMCD.sol";
 import "./ErrorReporter.sol";
 import "./Exponential.sol";
 import "./KineControllerInterface.sol";
-import "./ControllerStorage.sol";
 import "./Unitroller.sol";
 import "./KineOracleInterface.sol";
 import "./KineSafeMath.sol";
+import "./ControllerStorageV1.sol";
 
 /**
 Copyright 2020 Compound Labs, Inc.
@@ -34,7 +34,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @title Kine's Controller Contract
  * @author Kine
  */
-contract Controller is ControllerStorage, KineControllerInterface, Exponential, ControllerErrorReporter {
+contract ControllerV1 is ControllerStorageV1, KineControllerInterface, Exponential, ControllerErrorReporter {
     /// @notice Emitted when an admin supports a market
     event MarketListed(KToken kToken);
 
@@ -52,9 +52,6 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
 
     /// @notice Emitted when liquidation incentive is changed by admin
     event NewLiquidationIncentive(uint oldLiquidationIncentiveMantissa, uint newLiquidationIncentiveMantissa);
-
-    /// @notice Emitted when liquidation incentive per asset is changed by admin
-    event NewLiquidationIncentivePerAsset(address kToken, uint oldLiquidationIncentiveMantissa, uint newLiquidationIncentiveMantissa);
 
     /// @notice Emitted when price oracle is changed
     event NewPriceOracle(KineOracleInterface oldPriceOracle, KineOracleInterface newPriceOracle);
@@ -779,14 +776,11 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
         uint priceCollateralMantissa = oracle.getUnderlyingPrice(kTokenCollateral);
         require(priceBorrowedMantissa != 0 && priceCollateralMantissa != 0, "price error");
 
-        // get liquidationIncentive for kTokenCollateral, if not found, will use global liquidationIncentiveMantissa as dafult
-        uint liquidationIncentive = liquidationIncentivePerAsset[kTokenCollateral] == 0 ? liquidationIncentiveMantissa : liquidationIncentivePerAsset[kTokenCollateral];
-
         /*
          *  calculate the number of collateral tokens to seize:
          *  seizeTokens = actualRepayAmount * liquidationIncentive * priceBorrowed / priceCollateral
         */
-        Exp memory numerator = mulExp(liquidationIncentive, priceBorrowedMantissa);
+        Exp memory numerator = mulExp(liquidationIncentiveMantissa, priceBorrowedMantissa);
         Exp memory denominator = Exp({mantissa : priceCollateralMantissa});
         Exp memory ratio = divExp(numerator, denominator);
         uint seizeTokens = mulScalarTruncate(ratio, actualRepayAmount);
@@ -860,24 +854,6 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
         uint oldLiquidationIncentiveMantissa = liquidationIncentiveMantissa;
         liquidationIncentiveMantissa = newLiquidationIncentiveMantissa;
         emit NewLiquidationIncentive(oldLiquidationIncentiveMantissa, newLiquidationIncentiveMantissa);
-    }
-
-    /**
-      * @notice Sets liquidationIncentive per asset
-      * @dev Admin function to set liquidationIncentive
-      * @param kToken address
-      * @param newLiquidationIncentiveMantissa New liquidationIncentive scaled by 1e18
-      */
-    function _setLiquidationIncentivePerAsset(address kToken, uint newLiquidationIncentiveMantissa) external onlyAdmin() {
-        // Verify market is listed
-        Market memory market = markets[kToken];
-        require(market.isListed, MARKET_NOT_LISTED);
-        require(newLiquidationIncentiveMantissa <= liquidationIncentiveMaxMantissa, INVALID_LIQUIDATION_INCENTIVE);
-        require(newLiquidationIncentiveMantissa >= liquidationIncentiveMinMantissa, INVALID_LIQUIDATION_INCENTIVE);
-
-        uint oldLiquidationIncentiveMantissa = liquidationIncentivePerAsset[kToken];
-        liquidationIncentivePerAsset[kToken] = newLiquidationIncentiveMantissa;
-        emit NewLiquidationIncentivePerAsset(kToken, oldLiquidationIncentiveMantissa, newLiquidationIncentiveMantissa);
     }
 
     /**
