@@ -18,7 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 *   3. removed error code propagation mechanism to fail fast and loudly
 */
 
-contract KineControllerInterface {
+contract KineControllerInterfaceV1 {
     /// @notice Indicator that this is a Controller contract (for inspection)
     bool public constant isController = true;
 
@@ -93,7 +93,6 @@ contract KineControllerInterface {
     /*** Liquidity/Liquidation Calculations ***/
 
     function liquidateCalculateSeizeTokens(
-        address target,
         address kTokenBorrowed,
         address kTokenCollateral,
         uint repayAmount) external view returns (uint);

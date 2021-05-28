@@ -113,9 +113,17 @@ contract ControllerStorage is UnitrollerAdminStorage {
     mapping(address => uint) public supplyCaps;
 
     /**
-     * @notice Multiplier representing the discount on collateral that a liquidator receives
-     * each kToken can have different liquidationIncentive, if liquidationIncentive is not specified for one kToken, will use global liquidationIncentiveMantissa as default
+     * @notice Indicator whether redemption is paused
      */
-    mapping(address => uint) public liquidationIncentivePerAsset;
+    bool public redemptionPaused;
 
+    /**
+     * @notice Percentage of initial punishment when a redemption occur
+     */
+    uint public redemptionInitialPunishmentMantissa;
+
+    /**
+     * @notice Indicator whether redemption is paused per asset
+     */
+    mapping(address => bool) public redemptionPausedPerAsset;
 }

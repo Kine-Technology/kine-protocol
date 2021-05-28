@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
-import "./KineControllerInterface.sol";
-import "./KMCDInterfaces.sol";
+import "./KineControllerInterfaceV1.sol";
+import "./KMCDInterfacesV1.sol";
 import "./ErrorReporter.sol";
 import "./Exponential.sol";
 import "./KTokenInterfaces.sol";
@@ -32,7 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * after they supply collaterals in KTokens. One should notice that Kine MCD is not ERC20 token since it can't be transferred by user.
  * @author Kine
  */
-contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
+contract KMCDV1 is KMCDInterfaceV1, Exponential, KTokenErrorReporter {
     modifier onlyAdmin(){
         require(msg.sender == admin, "only admin can call this function");
         _;
@@ -54,7 +54,7 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
      * @param symbol_ Symbol of this MCD token
      * @param decimals_ Decimal precision of this token
      */
-    function initialize(KineControllerInterface controller_,
+    function initialize(KineControllerInterfaceV1 controller_,
         string memory name_,
         string memory symbol_,
         uint8 decimals_,
@@ -270,14 +270,14 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
         /* Fail if repayAmount = -1 */
         require(repayAmount != uint(- 1), INVALID_CLOSE_AMOUNT_REQUESTED);
 
+        /* Fail if repayBorrow fails */
+        uint actualRepayAmount = repayBorrowFresh(liquidator, borrower, repayAmount);
+
         /////////////////////////
         // EFFECTS & INTERACTIONS
 
         /* We calculate the number of collateral tokens that will be seized */
-        uint seizeTokens = controller.liquidateCalculateSeizeTokens(borrower, address(this), address(kTokenCollateral), repayAmount);
-
-        /* Fail if repayBorrow fails */
-        repayBorrowFresh(liquidator, borrower, repayAmount);
+        uint seizeTokens = controller.liquidateCalculateSeizeTokens(address(this), address(kTokenCollateral), actualRepayAmount);
 
         /* Revert if borrower collateral token balance < seizeTokens */
         require(kTokenCollateral.balanceOf(borrower) >= seizeTokens, LIQUIDATE_SEIZE_TOO_MUCH);
@@ -286,12 +286,12 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
         kTokenCollateral.seize(liquidator, borrower, seizeTokens);
 
         /* We emit a LiquidateBorrow event */
-        emit LiquidateBorrow(liquidator, borrower, repayAmount, address(kTokenCollateral), seizeTokens);
+        emit LiquidateBorrow(liquidator, borrower, actualRepayAmount, address(kTokenCollateral), seizeTokens);
 
         /* We call the defense hook */
-        controller.liquidateBorrowVerify(address(this), address(kTokenCollateral), liquidator, borrower, repayAmount, seizeTokens);
+        controller.liquidateBorrowVerify(address(this), address(kTokenCollateral), liquidator, borrower, actualRepayAmount, seizeTokens);
 
-        return repayAmount;
+        return actualRepayAmount;
     }
 
     /*** Admin Functions ***/
@@ -338,8 +338,8 @@ contract KMCD is KMCDInterface, Exponential, KTokenErrorReporter {
       * @notice Sets a new controller for the market
       * @dev Admin function to set a new controller
       */
-    function _setController(KineControllerInterface newController) public onlyAdmin() {
-        KineControllerInterface oldController = controller;
+    function _setController(KineControllerInterfaceV1 newController) public onlyAdmin() {
+        KineControllerInterfaceV1 oldController = controller;
         // Ensure invoke controller.isController() returns true
         require(newController.isController(), "marker method returned false");
 
