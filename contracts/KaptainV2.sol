@@ -44,11 +44,15 @@ contract KaptainV2 is Ownable {
     /// @notice Reporter address
     address public reporter;
 
-    constructor (address controller_, address minter_, address kUSD_, address reporter_, uint initialNonce) public {
+    constructor (address controller_, address minter_, address kUSD_, address reporter_) public {
         controller = KineControllerInterface(controller_);
         minter = KUSDMinter(minter_);
         kUSD = IERC20(kUSD_);
         reporter = reporter_;
+    }
+
+    function _setInitialNonce(uint initialNonce) external onlyOwner {
+        require(reporterNonce == 0, "initialNonce already set");
         reporterNonce = initialNonce;
     }
 
