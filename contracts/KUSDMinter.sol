@@ -23,7 +23,7 @@ interface IKMCD {
 
     function repayBorrowBehalf(address borrower, uint repayAmount) external;
 
-    function liquidateBorrowBehalf(address liquidator, address borrower, uint repayAmount, address kTokenCollateral) external;
+    function liquidateBorrowBehalf(address liquidator, address borrower, uint repayAmount, address kTokenCollateral, uint minSeizeKToken) external;
 
     function borrowBalance(address account) external view returns (uint);
 
@@ -400,7 +400,7 @@ contract KUSDMinter is IRewardDistributionRecipient {
      * @param maxBurnKUSDAmount The max amount limit of KUSD of liquidator to be burned.
      * @param kTokenCollateral The market in which to seize collateral from the staker.
      */
-    function liquidate(address staker, uint unstakeKMCDAmount, uint maxBurnKUSDAmount, address kTokenCollateral) external checkStart updateReward(staker) {
+    function liquidate(address staker, uint unstakeKMCDAmount, uint maxBurnKUSDAmount, address kTokenCollateral, uint minSeizeKToken) external checkStart updateReward(staker) {
         address msgSender = _msgSender();
 
         uint kMCDPriceMantissa = KineOracleInterface(controller.getOracle()).getUnderlyingPrice(address(kMCD));
@@ -425,7 +425,7 @@ contract KUSDMinter is IRewardDistributionRecipient {
         kUSD.burn(msgSender, vars.equivalentKUSDAmount);
 
         // call KMCD contract to liquidate staker's Kine MCD and seize collateral
-        kMCD.liquidateBorrowBehalf(msgSender, staker, unstakeKMCDAmount, kTokenCollateral);
+        kMCD.liquidateBorrowBehalf(msgSender, staker, unstakeKMCDAmount, kTokenCollateral, minSeizeKToken);
 
         emit Liquidate(msgSender, staker, vars.equivalentKUSDAmount, unstakeKMCDAmount, accountStakes(staker), totalStakes());
     }
