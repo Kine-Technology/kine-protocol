@@ -1,5 +1,6 @@
 {
   "oracle": "0x977746370145e1af4ff37a578454d57e2334a8a4",
+  "oracleV2": "0x9636Ea80329B4F0FC5AF2506B12242C023A30Cc7",
   "timelock": {
     "transaction": "0x9a498e7ddb0f5d28b9359ebeb5dadfc969f7b7a52f513c09f7a8db7501ddf903",
     "address": "0x9E8e622e0bA0deE491Fbc42d1Bb12Ab947e2D03B",
@@ -92,6 +93,12 @@
     "block": 12087266,
     "gas used": 1192605
   },
+  "KineSimpleBridge": {
+    "transaction": "0x2159a13cfdf5258dc6790577f53b5622993d0c4d9c8ea8a07beb547905409609",
+    "address": "0x80b91dEDE7D0d0891f46dA75Dbc25E976242f1d2",
+    "block": 12527681,
+    "gas used": 767052
+  },
   "Controller": {
     "transaction": "0xd2c7da579df4a804ab60ed906a41bc48082a9e1b88706370cb6f041c763e9f3d",
     "address": "0xd819D96f9D28Ea85C1DD78e66d7241134E8d4aB4",
@@ -103,6 +110,12 @@
     "address": "0xbB7D94a423f4978545ecf73161f0678e8AfD1a92",
     "block": 12086278,
     "gas used": 405662
+  },
+  "KineExchangeTreasury": {
+    "transaction": "0x82b48c3d35a199e28241eff9d5adb6f480f4cc4dc574adf8c1891428c055ed21",
+    "address": "0x545a25cBbCB63A5b6b65AF7896172629CA763645",
+    "block": 12528047,
+    "gas used": 1513882
   },
   "KMCD": {
     "delegate": {
@@ -159,6 +172,12 @@
     "address": "0xf8c7B7709Dd106e70133474BdF05d9d5a87C871f",
     "block": 12086725,
     "gas used": 1412445
+  },
+  "KaptainV2": {
+    "transaction": "0x9a67533c11a0f4cf213d7d080f8563f616a989464ba359a2cbaf997e8a1e072b",
+    "address": "0x1540e5821370aCE8120CE48554D35276D86A9F0c",
+    "block": 12527402,
+    "gas used": 1404388
   },
   "KineRanch": {
     "transaction": "0x05f1d235e739f3b8987b742b13c49a42c5a5fa085d490644b4519aee697f2513",
