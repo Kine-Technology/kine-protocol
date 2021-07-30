@@ -1,7 +1,6 @@
 pragma solidity ^0.5.16;
 
 import "./KUSDMinter.sol";
-import "./LiquidatorWhitelist.sol";
 
 /**
  * @title KUSDMinter is responsible to stake/unstake users' Kine MCD (see KMCD) and mint/burn KUSD (see KineUSD) on behalf of users.

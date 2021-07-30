@@ -20,6 +20,11 @@ contract LiquidatorWhitelist is Ownable {
         return liquidators[liquidatorToVerify];
     }
 
+    /// @notice get the whole whitelist
+    function getWhitelist() public view returns (address[] memory) {
+        return whitelist;
+    }
+
     function addLiquidators(address[] memory liquidatorsToAdd) public {
         for(uint i = 0; i < liquidatorsToAdd.length; i++){
             address liquidatorToAdd = liquidatorsToAdd[i];
