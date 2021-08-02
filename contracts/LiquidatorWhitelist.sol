@@ -25,7 +25,7 @@ contract LiquidatorWhitelist is Ownable {
         return whitelist;
     }
 
-    function addLiquidators(address[] memory liquidatorsToAdd) public {
+    function addLiquidators(address[] memory liquidatorsToAdd) public onlyOwner {
         for(uint i = 0; i < liquidatorsToAdd.length; i++){
             address liquidatorToAdd = liquidatorsToAdd[i];
             require(liquidators[liquidatorToAdd] == false, "existed");
@@ -35,7 +35,7 @@ contract LiquidatorWhitelist is Ownable {
         }
     }
 
-    function removeLiquidator(address liquidatorToRemove) public {
+    function removeLiquidator(address liquidatorToRemove) public onlyOwner{
         require(liquidators[liquidatorToRemove], "not existed");
 
         // remove mapping item
