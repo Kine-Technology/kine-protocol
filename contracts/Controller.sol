@@ -794,8 +794,10 @@ contract Controller is ControllerStorage, KineControllerInterface, Exponential, 
         } else {
             require(!redemptionPaused, "Redemption paused");
             require(!redemptionPausedPerAsset[kTokenCollateral], "Asset Redemption paused");
-            // a redemption occurs, will receive punishment on seized token
-            incentiveOrPunishment = redemptionInitialPunishmentMantissa;
+            // a redemption occurs, punishment will be adjusted as below
+            // adjusted redemption punishment = 1 - (redemptionInitialPunishment + (liquidity/collateralValue*cf)^2)
+            uint r = liquidity.mul(expScale).div(collateralValue).mul(cf).div(expScale);
+            incentiveOrPunishment = mantissaOne.sub(redemptionInitialPunishmentMantissa.add(r.mul(r).div(expScale)));
         }
 
         /*

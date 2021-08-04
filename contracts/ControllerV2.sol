@@ -35,7 +35,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @title Kine's Controller Contract
  * @author Kine
  */
-contract ControllerV2 is ControllerStorage, KineControllerInterface, Exponential, ControllerErrorReporter {
+contract Controller is ControllerStorage, KineControllerInterface, Exponential, ControllerErrorReporter {
     /// @notice Emitted when an admin supports a market
     event MarketListed(KToken kToken);
 
@@ -794,10 +794,8 @@ contract ControllerV2 is ControllerStorage, KineControllerInterface, Exponential
         } else {
             require(!redemptionPaused, "Redemption paused");
             require(!redemptionPausedPerAsset[kTokenCollateral], "Asset Redemption paused");
-            // a redemption occurs, punishment will be adjusted as below
-            // adjusted redemption punishment = 1 - (redemptionInitialPunishment + (liquidity/collateralValue*cf)^2)
-            uint r = liquidity.mul(expScale).div(collateralValue).mul(cf).div(expScale);
-            incentiveOrPunishment = mantissaOne.sub(redemptionInitialPunishmentMantissa.add(r.mul(r).div(expScale)));
+            // a redemption occurs, will receive punishment on seized token
+            incentiveOrPunishment = redemptionInitialPunishmentMantissa;
         }
 
         /*
