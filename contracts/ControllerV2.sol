@@ -35,7 +35,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @title Kine's Controller Contract
  * @author Kine
  */
-contract Controller is ControllerStorage, KineControllerInterface, Exponential, ControllerErrorReporter {
+contract ControllerV2 is ControllerStorage, KineControllerInterface, Exponential, ControllerErrorReporter {
     /// @notice Emitted when an admin supports a market
     event MarketListed(KToken kToken);
 
